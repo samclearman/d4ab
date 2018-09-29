@@ -22,10 +22,11 @@ export default class GraphicsTest extends React.Component {
 
   updateCanvasBoard() {
     const { board, hoveredCell } = this.state
-    this.canvasBoard.render({
+    this.canvasBoard.set({
       board,
       hoveredCell,
     })
+    this.canvasBoard.render()
   }
 
   handleHoverCell = (hoveredCell) => {
@@ -44,8 +45,8 @@ export default class GraphicsTest extends React.Component {
 
     const containerStyle = {
       margin: '30px auto',
-      width: 400,
-      height: 300,
+      width: 800,
+      height: 800,
       position: 'relative',
     }
     return (

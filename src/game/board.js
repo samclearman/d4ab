@@ -1,14 +1,16 @@
 import _ from 'lodash'
 const reducers = {
-  initialize(b, width, height) {
-    const cells = _.range(width * height).map(idx => ({
-      i: Math.floor(idx / width),
-      j: idx % width,
+  initialize(b, cols, rows, colors=4) {
+    const cells = _.range(cols * rows).map(idx => ({
+      i: Math.floor(idx / cols),
+      j: idx % cols,
       val: 0,
     }))
 
     const settings = {
-      colors: 4,
+      colors,
+      rows,
+      cols,
     }
 
     return {
@@ -39,6 +41,6 @@ const reducers = {
 
 export const RANDOM_BOARD = (
   reducers.randomize(
-    reducers.initialize({}, 10, 10)
+    reducers.initialize({}, 20, 20)
   )
 )
