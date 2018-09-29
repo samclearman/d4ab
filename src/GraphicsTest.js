@@ -1,30 +1,55 @@
 import React from 'react'
-import Board from './graphics/board'
+import CanvasBoard from './graphics/canvasBoard'
+import { RANDOM_BOARD } from './game/board'
 
 export default class GraphicsTest extends React.Component {
   constructor() {
     super()
     this.container = React.createRef()
     this.canvas = React.createRef()
-    this.board = new Board()
+    this.canvasBoard = new CanvasBoard()
+    this.state = {
+      board: RANDOM_BOARD,
+      hoveredCell: null,
+    }
   }
 
   componentDidMount() {
-    this.board.mount(this.container.current, this.canvas.current)
+    this.canvasBoard.mount(this.container.current, this.canvas.current)
+    this.updateCanvasBoard()
+    this.canvasBoard.on('hovercell', this.handleHoverCell)
   }
 
-  updateCanvas() {
-    this.board.render()
+  updateCanvasBoard() {
+    const { board, hoveredCell } = this.state
+    this.canvasBoard.render({
+      board,
+      hoveredCell,
+    })
+  }
+
+  handleHoverCell = (hoveredCell) => {
+    this.setState({
+      hoveredCell
+    })
   }
 
   render() {
     const canvasStyle = {
       position: 'absolute',
-      top: 0,
-      left: 0,
+      top: '50%',
+      left: '50%',
+      transform: 'translateX(-50%) translateY(-50%)'
+    }
+
+    const containerStyle = {
+      margin: '30px auto',
+      width: 400,
+      height: 300,
+      position: 'relative',
     }
     return (
-      <div ref={this.container}>
+      <div ref={this.container} style={containerStyle}>
         <canvas ref={this.canvas} style={canvasStyle}/>
       </div>
     )
