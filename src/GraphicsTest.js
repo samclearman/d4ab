@@ -99,6 +99,7 @@ export default class GraphicsTest extends React.PureComponent {
       <OminoSelector
         ominos={this.state.board.ominosRemaining[this.playerIndex]}
         selectedOmino={this.state.selectedOmino}
+        currentColor={this.state.currentColor}
         onSelectOmino={this.handleSelectOmino} />
     )
   }

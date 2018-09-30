@@ -15,6 +15,15 @@ const DEFAULT_THEME = {
   ],
 }
 
+export const makeTheme = (color) => ({
+  gridBackground: 'white',
+  gridLine: 'white',
+  colors: [
+    'white',
+    color,
+  ],
+})
+
 export default class CanvasBoard extends EventEmitter {
   constructor({
     theme = DEFAULT_THEME

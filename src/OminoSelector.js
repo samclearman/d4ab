@@ -1,6 +1,7 @@
 import React from 'react'
 import _ from 'lodash'
-import CanvasBoard from './graphics/canvasBoard'
+import CanvasBoard, { makeTheme } from './graphics/canvasBoard'
+import GestureListener from './GestureListener'
 import { reducers } from './game/board'
 import { unpadded } from './game/ominos'
 
@@ -24,21 +25,35 @@ class OminoCanvas extends React.PureComponent {
     this.updateCanvasBoard()
   }
 
+  get rows() {
+    const { omino } = this.props
+    const unpaddedOmino = unpadded(omino)
+    return unpaddedOmino.length
+  }
+
+  get cols() {
+    const { omino } = this.props
+    const unpaddedOmino = unpadded(omino)
+    return unpaddedOmino[0].length
+  }
+
   updateCanvasBoard() {
-    const { omino, currentColor } = this.props
+    const { omino, isSelected, currentColor } = this.props
     if (!omino) return
     const unpaddedOmino = unpadded(omino)
     const board = reducers.place(
-      reducers.initialize(null, unpaddedOmino[0].length, unpaddedOmino.length),
+      reducers.initialize(null, this.cols, this.rows),
       1,
       unpaddedOmino,
       { rotations: 0, flips: 0 },
       0,
       0,
     );
+
+    const theme = makeTheme(currentColor)
     this.canvasBoard.set({
       board,
-      currentColor,
+      theme,
     })
     this.canvasBoard.render()
   }
@@ -55,32 +70,39 @@ class OminoCanvas extends React.PureComponent {
     })
   }
 
+  handleClick = () => {
+    this.props.onSelect(this.props.omino)
+  }
+
   render() {
     const canvasStyle = {
       position: 'absolute',
       top: '50%',
       left: '50%',
-      transform: 'translateX(-50%) translateY(-50%)'
+      transform: 'translateX(-50%) translateY(-50%)',
     }
 
     const containerStyle = {
       margin: '30px auto',
-      width: 50,
-      height: 50,
+      width: this.cols * 20,
+      height: this.rows * 20,
       position: 'relative',
+      cursor: 'pointer',
+      outline: this.props.isSelected ? '4px solid purple' : 'none',
     }
-
 
     return (
       <div ref={this.container} style={containerStyle}>
-        <canvas ref={this.canvas} style={canvasStyle} onMouseEnter={this.handleHoverIn} onMouseLeave={this.handleHoverOut}/>
+        <GestureListener onClick={this.handleClick}>
+          <canvas ref={this.canvas} style={canvasStyle} onMouseEnter={this.handleHoverIn} onMouseLeave={this.handleHoverOut}/>
+        </GestureListener>
       </div>
     )
   }
 }
 
 export default class OminoSelector extends React.PureComponent {
-  handleClick = omino => {
+  handleSelect = omino => {
     this.props.onSelectOmino(omino)
   }
 
@@ -97,6 +119,7 @@ export default class OminoSelector extends React.PureComponent {
             omino={omino}
             currentColor={this.props.currentColor}
             isSelected={this.props.selectedOmino === omino}
+            onSelect={this.handleSelect}
             onHoverIn={this.handleHoverIn}
             onHoverOut={this.handleHoverOut}/>
         ))}
