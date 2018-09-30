@@ -3,7 +3,7 @@ import _ from 'lodash'
 import CanvasBoard from './graphics/canvasBoard'
 import { RANDOM_BOARD, reducers } from './game/board'
 import { ominos } from './game/ominos'
-import PieceSelector from './PieceSelector'
+import OminoSelector from './OminoSelector'
 
 export default class GraphicsTest extends React.PureComponent {
   constructor() {
@@ -14,7 +14,7 @@ export default class GraphicsTest extends React.PureComponent {
     this.state = {
       board: RANDOM_BOARD,
       hoveredCell: null,
-      selectedPiece: null,
+      selectedOmino: null,
       currentColor: 'red',
       pieces: [],
     }
@@ -38,6 +38,10 @@ export default class GraphicsTest extends React.PureComponent {
     this.updateCanvasBoard()
   }
 
+  get playerIndex() {
+    return this.state.board.nextPlayer
+  }
+
   updateCanvasBoard() {
     const { board, hoveredCell, currentColor } = this.state
     this.canvasBoard.set({
@@ -55,9 +59,9 @@ export default class GraphicsTest extends React.PureComponent {
     })
   }
 
-  handleSelectPiece = (selectedPiece) => {
+  handleSelectOmino = (selectedOmino) => {
     this.setState({
-      selectedPiece,
+      selectedOmino,
     })
   }
 
@@ -82,12 +86,12 @@ export default class GraphicsTest extends React.PureComponent {
     )
   }
 
-  renderPieceSelector() {
+  renderOminoSelector() {
     return (
-      <PieceSelector
-        pieces={this.state.pieces}
-        selectedPiece={this.state.selectedPiece}
-        onSelectPiece={this.handleSelectPiece} />
+      <OminoSelector
+        pieces={this.state.board.ominosRemaining[this.playerIndex]}
+        selectedOmino={this.state.selectedOmino}
+        onSelectOmino={this.handleSelectOmino} />
     )
   }
 
@@ -95,7 +99,7 @@ export default class GraphicsTest extends React.PureComponent {
     return (
       <div>
         {this.renderCanvasBoard()}
-        {this.renderPieceSelector()}
+        {this.renderOminoSelector()}
       </div>
     )
   }

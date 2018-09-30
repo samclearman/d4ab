@@ -2,7 +2,14 @@ import React from 'react'
 import _ from 'lodash'
 import CanvasBoard from './graphics/canvasBoard'
 
-class PieceCanvas extends React.PureComponent {
+class OminoCanvas extends React.PureComponent {
+  constructor() {
+    super()
+    this.container = React.createRef()
+    this.canvas = React.createRef()
+    this.canvasBoard = new CanvasBoard()
+  }
+
   componentDidMount() {
     this.canvasBoard.mount(this.container.current, this.canvas.current)
     this.componentDidUpdate()
@@ -30,8 +37,12 @@ class PieceCanvas extends React.PureComponent {
     this.canvasBoard.render()
   }
 
-  handleHover = () => {
-    this.props.onHover(this.props.piece)
+  handleHoverIn = () => {
+    this.props.onHoverIn(this.props.piece)
+  }
+
+  handleHoverOut = () => {
+    this.props.onHoverOut(this.props.piece)
   }
 
   render() {
@@ -52,13 +63,13 @@ class PieceCanvas extends React.PureComponent {
 
     return (
       <div ref={this.container} style={containerStyle}>
-        <canvas ref={this.canvas} style={canvasStyle} onHover={this.handleHover}/>
+        <canvas ref={this.canvas} style={canvasStyle} onMouseEnter={this.handleHoverIn} onMouseLeave={this.handleHoverOut}/>
       </div>
     )
   }
 }
 
-export default class PieceSelector extends React.PureComponent {
+export default class OminoSelector extends React.PureComponent {
 
   handleHover = piece => {
     console.log('HANDLE HOVER', piece)
@@ -68,12 +79,13 @@ export default class PieceSelector extends React.PureComponent {
     return (
       <div>
         {_.map(this.props.pieces, (piece, i) => (
-          <PieceCanvas
+          <OminoCanvas
             key={i}
             piece={piece}
             currentColor={this.props.currentColor}
-            isSelected={this.props.selectedPiece === piece}
-            onHover={this.handleHover} />
+            isSelected={this.props.selectedOmino === piece}
+            onHoverIn={this.handleHoverIn}
+            onHoverOut={this.handleHoverOut}/>
         ))}
       </div>
     )
