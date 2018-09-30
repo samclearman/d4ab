@@ -5,7 +5,7 @@ import { RANDOM_BOARD, reducers } from './game/board'
 import { ominos } from './game/ominos'
 import OminoSelector from './OminoSelector'
 
-export default class GraphicsTest extends React.PureComponent {
+export default class Game extends React.PureComponent {
   constructor() {
     super()
     this.container = React.createRef()
