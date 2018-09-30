@@ -119,10 +119,10 @@ export default class CanvasBoard extends EventEmitter {
     const y = i * cellSize
     ctx.fillStyle = getHexStr8(color, 1.0)
     ctx.fillRect(x, y, cellSize, cellSize)
-    ctx.fillStyle = getHexStr8('white', 0.4)
+    ctx.fillStyle = getHexStr8('white', 0.5)
     ctx.fillRect(x, y, cellSize, cellSize)
     if (ghost) {
-      ctx.fillStyle = getHexStr8('white', 0.4)
+      ctx.fillStyle = getHexStr8('#cccccc', 0.4)
       ctx.fillRect(x, y, cellSize, cellSize)
     }
   }

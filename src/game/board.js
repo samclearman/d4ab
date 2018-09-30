@@ -77,7 +77,7 @@ export const reducers = {
     }
   },
 
-  randomize(b, density=1) {
+  randomize(b, density=0.5) {
     const colors = b.settings.colors
     const gen = () => {
       if (Math.random() > density) {
