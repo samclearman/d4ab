@@ -16,7 +16,7 @@ export default class GraphicsTest extends React.Component {
     this.state.board = reducers.place(
       this.state.board,
       1,
-      ominos()[2],
+      ominos()[5],
       { rotations: 1, flips: 1 },
       2,
       3

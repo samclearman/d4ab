@@ -4,7 +4,7 @@ import { ominos, transformed } from './ominos';
 
 const WIDTH = 20;
 
-const reducers = {
+export const reducers = {
   initialize(b, cols, rows, colors=4) {
     const cells = _.range(cols * rows).map(idx => ({
       i: Math.floor(idx / cols),
@@ -65,10 +65,11 @@ const reducers = {
   place(b, player, omino, transformation, x, y) {
     const t = transformed(omino, transformation);
     const cells = _.cloneDeep(b.cells);
-    for (let i = 0; i < omino.length; i++) {
-      for (let j = 0; j < omino.length; j++) {
+    for (let i = 0; i < t.length; i++) {
+      for (let j = 0; j < t[i].length; j++) {
         if (t[i][j]) {
-          cells[((x + i) * WIDTH) + y + j].val = player;
+          const cell = cells[((x + i) * WIDTH) + y + j];
+          cell.val = player;
         }
       }
     }
