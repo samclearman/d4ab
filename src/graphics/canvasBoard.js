@@ -1,7 +1,7 @@
 import EventEmitter from 'events'
 import { getHexStr8 } from './utils'
 
-const DEFAULT_THEME = {
+export const DEFAULT_THEME = {
   // https://www.color-hex.com/color/e5f2ff
   gridBackground: '#e5f2ff',
   gridLine: 'white',
@@ -70,6 +70,16 @@ export default class CanvasBoard extends EventEmitter {
     this.emit('hovercell', null)
   }
 
+  handleClick = (e) => {
+    const cellSize = this.cellSize
+    const rect = this.canvas.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    const i = Math.floor(y / cellSize)
+    const j = Math.floor(x / cellSize)
+    this.emit('clickcell', { i, j })
+  }
+
   handleMouseMove = (e) => {
     const cellSize = this.cellSize
     const rect = this.canvas.getBoundingClientRect()
@@ -85,6 +95,7 @@ export default class CanvasBoard extends EventEmitter {
     this.container = container
     this.canvas = canvas
     this.canvas.addEventListener('mousemove', this.handleMouseMove)
+    this.canvas.addEventListener('click', this.handleClick)
   }
 
   resize() {

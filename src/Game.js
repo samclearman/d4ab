@@ -1,6 +1,6 @@
 import React from 'react'
 import _ from 'lodash'
-import CanvasBoard from './graphics/canvasBoard'
+import CanvasBoard, { DEFAULT_THEME } from './graphics/canvasBoard'
 import { RANDOM_BOARD, reducers, validatePlace } from './game/board'
 import { ominos } from './game/ominos'
 import OminoSelector from './OminoSelector'
@@ -15,12 +15,12 @@ export default class Game extends React.PureComponent {
       board: RANDOM_BOARD,
       hoveredCell: null,
       selectedOmino: null,
-      currentColor: 'red',
       pieces: [],
       currentTransformation: {
         rotations: 0,
         flips: 0,
       },
+      theme: DEFAULT_THEME,
     }
     this.state.board = reducers.place(
       this.state.board,
@@ -44,30 +44,40 @@ export default class Game extends React.PureComponent {
     this.canvasBoard.mount(this.container.current, this.canvas.current)
     this.componentDidUpdate()
     this.canvasBoard.on('hovercell', this.handleHoverCell)
+    this.canvasBoard.on('clickcell', this.handleClickCell)
   }
 
   componentDidUpdate() {
     this.updateCanvasBoard()
   }
 
+  componentWillUnmount() {
+    this.canvasBoard.off('hovercell', this.handleHoverCell)
+    this.canvasBoard.off('clickcell', this.handleClickCell)
+  }
+
   get playerIndex() {
     return this.state.board.nextPlayer
   }
 
+  get currentColor() {
+    return this.state.theme.colors[this.playerIndex]
+  }
+
   updateCanvasBoard() {
-    const { board, hoveredCell, currentColor, selectedOmino, currentTransformation } = this.state
+    const { board, hoveredCell, selectedOmino, currentTransformation } = this.state
     const cells = board.cells
     const dimensions = {
       rows: board.settings.rows,
       cols: board.settings.cols,
     }
+    const currentColor = this.currentColor
     const ghost = (hoveredCell && selectedOmino) ? {
       omino: selectedOmino,
       position: hoveredCell,
       transformation: currentTransformation,
       valid: validatePlace(board, this.playerIndex, selectedOmino, currentTransformation, hoveredCell.i, hoveredCell.j),
     } : null
-    console.log(ghost)
     this.canvasBoard.set({
       dimensions,
       cells,
@@ -81,6 +91,18 @@ export default class Game extends React.PureComponent {
     if (_.isEqual(hoveredCell, this.state.hoveredCell)) return
     this.setState({
       hoveredCell
+    })
+  }
+
+  handleClickCell = (cell) => {
+    const { board, selectedOmino, currentTransformation } = this.state
+    if (!selectedOmino) { return }
+    if (!validatePlace(board, this.playerIndex, selectedOmino, currentTransformation, cell.i, cell.j)) { return }
+
+    console.log('placing piece')
+    this.setState({
+      board: reducers.place(board, this.playerIndex, selectedOmino, currentTransformation, cell.i, cell.j),
+      selectedOmino: null,
     })
   }
 
@@ -116,7 +138,7 @@ export default class Game extends React.PureComponent {
       <OminoSelector
         ominos={this.state.board.ominosRemaining[this.playerIndex]}
         selectedOmino={this.state.selectedOmino}
-        currentColor={this.state.currentColor}
+        currentColor={this.currentColor}
         onSelectOmino={this.handleSelectOmino} />
     )
   }
