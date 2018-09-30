@@ -218,6 +218,10 @@ array-map@~0.0.0:
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/array-map/-/array-map-0.0.0.tgz#88a2bab73d1cf7bcd5c1b118a003f66f665fa662"
 
+array-pad@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/array-pad/-/array-pad-0.0.1.tgz#cb862957dcfdaf5902e2ae2f5b6263dd64708e30"
+
 array-reduce@~0.0.0:
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/array-reduce/-/array-reduce-0.0.0.tgz#173899d3ffd1c7d9383e4479525dbe278cab5f2b"

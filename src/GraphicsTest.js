@@ -1,6 +1,7 @@
 import React from 'react'
 import CanvasBoard from './graphics/canvasBoard'
-import { RANDOM_BOARD } from './game/board'
+import { RANDOM_BOARD, reducers } from './game/board'
+import { ominos } from './game/ominos'
 
 export default class GraphicsTest extends React.Component {
   constructor() {
@@ -12,6 +13,14 @@ export default class GraphicsTest extends React.Component {
       board: RANDOM_BOARD,
       hoveredCell: null,
     }
+    this.state.board = reducers.place(
+      this.state.board,
+      1,
+      ominos()[2],
+      { rotations: 1, flips: 1 },
+      2,
+      3
+    );
   }
 
   componentDidMount() {
