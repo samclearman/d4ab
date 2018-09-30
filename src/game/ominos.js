@@ -1,5 +1,5 @@
-import pad from 'array-pad';
-import _ from 'lodash';
+import pad from 'array-pad'
+import _ from 'lodash'
 
 export const unpadded = (omino) => {
   let R = 0
@@ -7,8 +7,8 @@ export const unpadded = (omino) => {
   omino.forEach((row, i) => {
     row.forEach((cell, j) => {
       if (cell) {
-        R = Math.max(R, i)
-        C = Math.max(C, j)
+        R = Math.max(R, i + 1)
+        C = Math.max(C, j + 1)
       }
     })
   })

@@ -2,8 +2,6 @@ import _ from 'lodash'
 
 import { ominos, transformed } from './ominos';
 
-const WIDTH = 20;
-
 export const reducers = {
   initialize(b, cols, rows, colors=4) {
     const cells = _.range(cols * rows).map(idx => ({
@@ -63,12 +61,15 @@ export const reducers = {
   },
 
   place(b, player, omino, transformation, x, y) {
+    console.log('place')
+    const cols = b.settings.cols
     const t = transformed(omino, transformation);
     const cells = _.cloneDeep(b.cells);
+    debugger
     for (let i = 0; i < t.length; i++) {
       for (let j = 0; j < t[i].length; j++) {
         if (t[i][j]) {
-          const cell = cells[((x + i) * WIDTH) + y + j];
+          const cell = cells[((x + i) * cols) + y + j];
           cell.val = player;
         }
       }
@@ -83,6 +84,6 @@ export const reducers = {
 
 export const RANDOM_BOARD = (
   reducers.randomize(
-    reducers.initialize({}, WIDTH, 20)
+    reducers.initialize({}, 20, 20)
   )
 )

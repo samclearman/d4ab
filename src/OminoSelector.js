@@ -1,6 +1,8 @@
 import React from 'react'
 import _ from 'lodash'
 import CanvasBoard from './graphics/canvasBoard'
+import { reducers } from './game/board'
+import { unpadded } from './game/ominos'
 
 class OminoCanvas extends React.PureComponent {
   constructor() {
@@ -8,12 +10,14 @@ class OminoCanvas extends React.PureComponent {
     this.container = React.createRef()
     this.canvas = React.createRef()
     this.canvasBoard = new CanvasBoard()
+    this.state = {
+      isHovering: false,
+    }
   }
 
   componentDidMount() {
     this.canvasBoard.mount(this.container.current, this.canvas.current)
     this.componentDidUpdate()
-    this.canvasBoard.on('hovercell', this.handleHoverCell)
   }
 
   componentDidUpdate() {
@@ -21,15 +25,17 @@ class OminoCanvas extends React.PureComponent {
   }
 
   updateCanvasBoard() {
-    const { piece, currentColor } = this.props
-    const cells = piece.cells
-    const board = {
-      settings: {
-        rows: piece.rows,
-        cols: piece.cols,
-      },
-      cells,
-    }
+    const { omino, currentColor } = this.props
+    if (!omino) return
+    const unpaddedOmino = unpadded(omino)
+    const board = reducers.place(
+      reducers.initialize(null, unpaddedOmino[0].length, unpaddedOmino.length),
+      1,
+      unpaddedOmino,
+      { rotations: 0, flips: 0 },
+      0,
+      0,
+    );
     this.canvasBoard.set({
       board,
       currentColor,
@@ -38,11 +44,15 @@ class OminoCanvas extends React.PureComponent {
   }
 
   handleHoverIn = () => {
-    this.props.onHoverIn(this.props.piece)
+    this.setState({
+      isHovering: true,
+    })
   }
 
   handleHoverOut = () => {
-    this.props.onHoverOut(this.props.piece)
+    this.setState({
+      isHovering: false,
+    })
   }
 
   render() {
@@ -70,20 +80,23 @@ class OminoCanvas extends React.PureComponent {
 }
 
 export default class OminoSelector extends React.PureComponent {
-
-  handleHover = piece => {
-    console.log('HANDLE HOVER', piece)
+  handleClick = omino => {
+    this.props.onSelectOmino(omino)
   }
 
   render() {
+    const containerStyle = {
+      display: 'flex',
+      flexWrap: 'wrap',
+    }
     return (
-      <div>
-        {_.map(this.props.pieces, (piece, i) => (
+      <div style={containerStyle}>
+        {_.map(this.props.ominos, (omino, i) => (
           <OminoCanvas
             key={i}
-            piece={piece}
+            omino={omino}
             currentColor={this.props.currentColor}
-            isSelected={this.props.selectedOmino === piece}
+            isSelected={this.props.selectedOmino === omino}
             onHoverIn={this.handleHoverIn}
             onHoverOut={this.handleHoverOut}/>
         ))}

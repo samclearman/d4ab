@@ -89,7 +89,7 @@ export default class GraphicsTest extends React.PureComponent {
   renderOminoSelector() {
     return (
       <OminoSelector
-        pieces={this.state.board.ominosRemaining[this.playerIndex]}
+        ominos={this.state.board.ominosRemaining[this.playerIndex]}
         selectedOmino={this.state.selectedOmino}
         onSelectOmino={this.handleSelectOmino} />
     )
