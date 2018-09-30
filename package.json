@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "array-pad": "^0.0.1",
     "events": "^3.0.0",
     "lodash": "^4.17.11",
     "react": "^16.5.2",
