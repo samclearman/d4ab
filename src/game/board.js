@@ -4,8 +4,21 @@ import { ominos, transformed } from './ominos';
 
 const WIDTH = 20;
 
+const error = (b) => {
+  return { ...b, error: true };
+}
+
+const vacant = (cells, positions) => {
+  for (const {i, j} of positions) {
+    if (cells[(i * WIDTH) + j].val !== 0) {
+      return false;
+    }
+  }
+  return true;
+};
+
 export const reducers = {
-  initialize(b, cols, rows, colors=4) {
+  initialize(b, cols, rows, players=4) {
     const cells = _.range(cols * rows).map(idx => ({
       i: Math.floor(idx / cols),
       j: idx % cols,
@@ -13,25 +26,25 @@ export const reducers = {
     }))
 
     const settings = {
-      colors,
+      players,
       rows,
       cols,
     }
 
     const ominosRemaining = {
-      0: ominos(),
       1: ominos(),
       2: ominos(),
       3: ominos(),
+      4: ominos(),
     }
 
-    const nextPlayer = 0;
+    const nextPlayer = 1;
 
     const alive = {
-      0: true,
       1: true,
       2: true,
       3: true,
+      4: true,
     }
 
     return {
@@ -63,18 +76,30 @@ export const reducers = {
   },
 
   place(b, player, omino, transformation, x, y) {
-    const t = transformed(omino, transformation);
-    const cells = _.cloneDeep(b.cells);
+    if (player !== b.nextPlayer) {
+      return error(b);
+    }
+    const t = transformed(omino, transformation)
+    const positions = []
     for (let i = 0; i < t.length; i++) {
       for (let j = 0; j < t[i].length; j++) {
         if (t[i][j]) {
-          const cell = cells[((x + i) * WIDTH) + y + j];
-          cell.val = player;
+          positions.push({i: x + i, j: y + j})
         }
       }
     }
+    if (!vacant(b.cells, positions)) {
+      return error(b);
+    }
+    const cells = _.cloneDeep(b.cells)
+    const nextPlayer = ((player + 1) % b.settings.players) || b.settings.players
+    for (const {i, j} of positions) {
+      const cell = cells[(i * WIDTH) + j]
+      cell.val = player
+    }
     return {
       ...b,
+      nextPlayer,
       cells,
     }
   },
