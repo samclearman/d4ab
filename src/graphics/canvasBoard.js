@@ -16,9 +16,11 @@ const DEFAULT_THEME = {
 }
 
 export default class CanvasBoard extends EventEmitter {
-  constructor() {
+  constructor({
+    theme = DEFAULT_THEME
+  } = {}) {
     super()
-    this.theme = DEFAULT_THEME
+    this.theme = theme
   }
 
   get rows() {
@@ -41,10 +43,12 @@ export default class CanvasBoard extends EventEmitter {
     theme,
     board,
     hoveredCell,
+    currentColor,
   }) {
     if (theme !== undefined) this.theme = theme
     if (board !== undefined) this.board = board
     if (hoveredCell !== undefined) this.hoveredCell = hoveredCell
+    if (currentColor !== undefined) this.currentColor = currentColor
   }
 
   handleMouseExit = (e) => {
@@ -56,8 +60,8 @@ export default class CanvasBoard extends EventEmitter {
     const rect = this.canvas.getBoundingClientRect()
     const x = e.clientX - rect.left
     const y = e.clientY - rect.top
-    const i = y / cellSize
-    const j = x / cellSize
+    const i = Math.floor(y / cellSize)
+    const j = Math.floor(x / cellSize)
 
     this.emit('hovercell', { i, j })
   }
@@ -105,19 +109,22 @@ export default class CanvasBoard extends EventEmitter {
     ctx.stroke()
   }
 
-  renderCell(i, j, color) {
+  renderCell(i, j, color, { ghost = false } = {} ) {
     const canvas = this.canvas,
           ctx = canvas.getContext('2d'),
           cellSize = this.cellSize
     const strokeWidth = cellSize * 0.2
     ctx.lineWidth = strokeWidth
-    console.log(strokeWidth)
-    const x = i * cellSize
-    const y = j * cellSize
+    const x = j * cellSize
+    const y = i * cellSize
     ctx.fillStyle = getHexStr8(color, 1.0)
     ctx.fillRect(x, y, cellSize, cellSize)
     ctx.fillStyle = getHexStr8('white', 0.4)
     ctx.fillRect(x, y, cellSize, cellSize)
+    if (ghost) {
+      ctx.fillStyle = getHexStr8('white', 0.4)
+      ctx.fillRect(x, y, cellSize, cellSize)
+    }
   }
 
   renderBoard() {
@@ -131,10 +138,21 @@ export default class CanvasBoard extends EventEmitter {
     }
   }
 
+  renderHoveredCell() {
+    const hoveredCell = this.hoveredCell
+    if (!hoveredCell) return
+    const currentColor = this.currentColor
+    const { i, j } = hoveredCell
+    this.renderCell(i, j, currentColor, {
+      ghost: true,
+    })
+  }
+
   render() {
     this.resize()
     this.renderGrid()
     this.renderBoard()
+    this.renderHoveredCell()
     this.renderGridLines()
   }
 
