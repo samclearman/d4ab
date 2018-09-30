@@ -38,7 +38,7 @@ class OminoCanvas extends React.PureComponent {
   }
 
   updateCanvasBoard() {
-    const { omino, isSelected, currentColor } = this.props
+    const { omino, currentColor } = this.props
     if (!omino) return
     const unpaddedOmino = unpadded(omino)
     const board = reducers.place(
@@ -83,7 +83,7 @@ class OminoCanvas extends React.PureComponent {
     }
 
     const containerStyle = {
-      margin: '30px auto',
+      margin: '30px',
       width: this.cols * 20,
       height: this.rows * 20,
       position: 'relative',
@@ -110,6 +110,7 @@ export default class OminoSelector extends React.PureComponent {
     const containerStyle = {
       display: 'flex',
       flexWrap: 'wrap',
+      justifyContent: 'center',
     }
     return (
       <div style={containerStyle}>

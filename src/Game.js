@@ -83,8 +83,8 @@ export default class Game extends React.PureComponent {
 
     const containerStyle = {
       margin: '30px auto',
-      width: 800,
-      height: 800,
+      width: 600,
+      height: 600,
       position: 'relative',
     }
     return (
@@ -105,8 +105,14 @@ export default class Game extends React.PureComponent {
   }
 
   render() {
+    const containerStyle = {
+      display: 'flex',
+      flexDirection: 'column',
+      alignSelf: 'center',
+      margin: '0 auto',
+    }
     return (
-      <div>
+      <div style={containerStyle}>
         {this.renderCanvasBoard()}
         {this.renderOminoSelector()}
       </div>
