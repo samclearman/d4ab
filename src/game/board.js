@@ -23,6 +23,8 @@ const inBounds = (cells, positions) => {
 
 const vacant = (cells, positions) => {
   for (const {i, j} of positions) {
+    if (i < 0 || i >= HEIGHT || j < 0 || j >= WIDTH) return false
+    console.log(cells, i, j)
     if (cells[(i * WIDTH) + j].val !== 0) {
       console.log(i, j, cells)
       return false;
@@ -37,6 +39,41 @@ const sharesEdgeWith = (cells, positions, player) => {
 
 const sharesVertexWith = (cells, positions, player) => {
   return true;
+}
+
+export const validatePlace = (b, player, omino, transformation, x, y) => {
+  if (player !== b.nextPlayer) {
+    return false
+  }
+  const t = transformed(omino, transformation)
+  const positions = []
+  for (let i = 0; i < t.length; i++) {
+    for (let j = 0; j < t[i].length; j++) {
+      if (t[i][j]) {
+        positions.push({i: x + i, j: y + j})
+      }
+    }
+  }
+  if (!inBounds(b.cells, positions)) {
+    return false
+  }
+  if (!vacant(b.cells, positions)) {
+    return false
+  }
+  if (sharesEdgeWith(b.cells, positions, player)) {
+    return false
+  }
+    /*
+  if (b.moveCounts[player] === 0) {
+    // handle first-move logic
+    if (positions contains(b.firstMoves[player]) {
+    }
+  } else {
+    if (!sharesVertexWith(b.cells, positions, player)) {
+      return error(b);
+    }
+  } */
+  return true
 }
 
 export const reducers = {
@@ -78,7 +115,7 @@ export const reducers = {
     }
   },
 
-  randomize(b, density=1.5) {
+  randomize(b, density=0.5) {
     const players = b.settings.players
     const gen = () => {
       if (Math.random() > density) {
@@ -98,7 +135,7 @@ export const reducers = {
   },
 
   place(b, player, omino, transformation, x, y) {
-    if (player !== b.nextPlayer) {
+    if (!validatePlace(b, player, omino, transformation, x, y)) {
       return error(b);
     }
     const t = transformed(omino, transformation)
@@ -110,25 +147,6 @@ export const reducers = {
         }
       }
     }
-    if (!inBounds(b.cells, positions)) {
-      return error(b);
-    }
-    if (!vacant(b.cells, positions)) {
-      return error(b);
-    }
-    if (sharesEdgeWith(b.cells, positions, player)) {
-      return error(b);
-    }
-      /*
-    if (b.moveCounts[player] === 0) {
-      // handle first-move logic
-      if (positions contains(b.firstMoves[player]) {
-      }
-    } else {
-      if (!sharesVertexWith(b.cells, positions, player)) {
-        return error(b);
-      }
-    } */
     const cells = _.cloneDeep(b.cells)
     const nextPlayer = ((player + 1) % b.settings.players) || b.settings.players
     for (const {i, j} of positions) {
@@ -145,7 +163,7 @@ export const reducers = {
 
 
 export const RANDOM_BOARD = (
-  reducers.randomize(
+  // reducers.randomize(
     reducers.initialize({}, 20, 20)
-  )
+  // )
 )

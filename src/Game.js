@@ -1,7 +1,7 @@
 import React from 'react'
 import _ from 'lodash'
 import CanvasBoard from './graphics/canvasBoard'
-import { RANDOM_BOARD, reducers } from './game/board'
+import { RANDOM_BOARD, reducers, validatePlace } from './game/board'
 import { ominos } from './game/ominos'
 import OminoSelector from './OminoSelector'
 
@@ -17,6 +17,10 @@ export default class Game extends React.PureComponent {
       selectedOmino: null,
       currentColor: 'red',
       pieces: [],
+      currentTransformation: {
+        rotations: 0,
+        flips: 0,
+      },
     }
     this.state.board = reducers.place(
       this.state.board,
@@ -51,20 +55,26 @@ export default class Game extends React.PureComponent {
   }
 
   updateCanvasBoard() {
-    const { board, hoveredCell, currentColor } = this.state
+    const { board, hoveredCell, currentColor, selectedOmino, currentTransformation } = this.state
     const cells = board.cells
     const dimensions = {
       rows: board.settings.rows,
       cols: board.settings.cols,
     }
+    const ghost = (hoveredCell && selectedOmino) ? {
+      omino: selectedOmino,
+      position: hoveredCell,
+      transformation: currentTransformation,
+      valid: validatePlace(board, this.playerIndex, selectedOmino, currentTransformation, hoveredCell.i, hoveredCell.j),
+    } : null
+    console.log(ghost)
     this.canvasBoard.set({
       dimensions,
       cells,
       currentColor,
-      hoveredCell,
+      ghost,
     })
     this.canvasBoard.render()
-    console.log(board)
   }
 
   handleHoverCell = (hoveredCell) => {

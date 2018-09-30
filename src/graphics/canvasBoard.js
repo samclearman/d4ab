@@ -30,6 +30,10 @@ export default class CanvasBoard extends EventEmitter {
   } = {}) {
     super()
     this.theme = theme
+    this.cells = null
+    this.dimensions = null
+    this.ghost = null
+    this.currentColor = null
   }
 
   get rows() {
@@ -52,13 +56,13 @@ export default class CanvasBoard extends EventEmitter {
     theme,
     cells,
     dimensions,
-    hoveredCell,
+    ghost,
     currentColor,
   }) {
     if (theme !== undefined) this.theme = theme
     if (cells !== undefined) this.cells = cells
     if (dimensions !== undefined) this.dimensions = dimensions
-    if (hoveredCell !== undefined) this.hoveredCell = hoveredCell
+    if (ghost !== undefined) this.ghost = ghost
     if (currentColor !== undefined) this.currentColor = currentColor
   }
 
@@ -120,25 +124,32 @@ export default class CanvasBoard extends EventEmitter {
     ctx.stroke()
   }
 
-  renderCell(i, j, color, { ghost = false } = {} ) {
+  renderCell(i, j, color, { ghost = false, valid = false } = {} ) {
     const canvas = this.canvas,
           ctx = canvas.getContext('2d'),
           cellSize = this.cellSize
-    const strokeWidth = cellSize * 0.2
-    ctx.lineWidth = strokeWidth
     const x = j * cellSize
     const y = i * cellSize
-    ctx.fillStyle = getHexStr8(color, 1.0)
-    ctx.fillRect(x, y, cellSize, cellSize)
-    ctx.fillStyle = getHexStr8('white', 0.5)
-    ctx.fillRect(x, y, cellSize, cellSize)
     if (ghost) {
-      ctx.fillStyle = getHexStr8('#cccccc', 0.4)
+      if (valid) {
+        ctx.fillStyle = getHexStr8(color, 0.6)
+        ctx.fillRect(x, y, cellSize, cellSize)
+        ctx.fillStyle = getHexStr8('#cccccc', 0.6)
+        ctx.fillRect(x, y, cellSize, cellSize)
+      } else {
+        ctx.fillStyle = getHexStr8('#cccccc', 0.6)
+        ctx.fillRect(x, y, cellSize, cellSize)
+      }
+    } else {
+      ctx.fillStyle = getHexStr8(color, 1.0)
+      ctx.fillRect(x, y, cellSize, cellSize)
+      ctx.fillStyle = getHexStr8('white', 0.5)
       ctx.fillRect(x, y, cellSize, cellSize)
     }
   }
 
   renderBoard() {
+    if (!this.cells) return
     const cells = this.cells
     for (const cell of cells) {
       const { i, j, val } = cell
@@ -148,13 +159,26 @@ export default class CanvasBoard extends EventEmitter {
     }
   }
 
-  renderHoveredCell() {
+  renderGhost() {
     const hoveredCell = this.hoveredCell
-    if (!hoveredCell) return
+    const ghost = this.ghost
+    if (!ghost) return
+    const {
+      omino,
+      position,
+      valid,
+    } = ghost
+    if (!omino || !position) return
     const currentColor = this.currentColor
-    const { i, j } = hoveredCell
-    this.renderCell(i, j, currentColor, {
-      ghost: true,
+    const { i: di, j: dj } = position
+    omino.forEach((row, i) => {
+      row.forEach((cell, j) => {
+        if (!cell) return
+        this.renderCell(i + di, j + dj, currentColor, {
+          valid,
+          ghost: true,
+        })
+      })
     })
   }
 
@@ -162,7 +186,7 @@ export default class CanvasBoard extends EventEmitter {
     this.resize()
     this.renderGrid()
     this.renderBoard()
-    this.renderHoveredCell()
+    this.renderGhost()
     this.renderGridLines()
   }
 
