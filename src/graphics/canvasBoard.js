@@ -33,11 +33,11 @@ export default class CanvasBoard extends EventEmitter {
   }
 
   get rows() {
-    return this.board.settings.rows
+    return this.dimensions.rows
   }
 
   get cols() {
-    return this.board.settings.cols
+    return this.dimensions.cols
   }
 
   get aspectRatio() {
@@ -50,12 +50,14 @@ export default class CanvasBoard extends EventEmitter {
 
   set({
     theme,
-    board,
+    cells,
+    dimensions,
     hoveredCell,
     currentColor,
   }) {
     if (theme !== undefined) this.theme = theme
-    if (board !== undefined) this.board = board
+    if (cells !== undefined) this.cells = cells
+    if (dimensions !== undefined) this.dimensions = dimensions
     if (hoveredCell !== undefined) this.hoveredCell = hoveredCell
     if (currentColor !== undefined) this.currentColor = currentColor
   }
@@ -137,8 +139,7 @@ export default class CanvasBoard extends EventEmitter {
   }
 
   renderBoard() {
-    const board = this.board
-    const { cells } = board
+    const cells = this.cells
     for (const cell of cells) {
       const { i, j, val } = cell
       if (val) {

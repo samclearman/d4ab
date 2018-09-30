@@ -24,6 +24,7 @@ const inBounds = (cells, positions) => {
 const vacant = (cells, positions) => {
   for (const {i, j} of positions) {
     if (cells[(i * WIDTH) + j].val !== 0) {
+      console.log(i, j, cells)
       return false;
     }
   }
@@ -77,11 +78,11 @@ export const reducers = {
     }
   },
 
-  randomize(b, density=0.5) {
-    const colors = b.settings.colors
+  randomize(b, density=1.5) {
+    const players = b.settings.players
     const gen = () => {
       if (Math.random() > density) {
-        return Math.floor(Math.random() * (colors)) + 1
+        return Math.floor(Math.random() * (players)) + 1
       }
       return 0
     }
@@ -118,9 +119,16 @@ export const reducers = {
     if (sharesEdgeWith(b.cells, positions, player)) {
       return error(b);
     }
-    if (!sharesVertexWith(b.cells, positions, player)) {
-      return error(b);
-    }
+      /*
+    if (b.moveCounts[player] === 0) {
+      // handle first-move logic
+      if (positions contains(b.firstMoves[player]) {
+      }
+    } else {
+      if (!sharesVertexWith(b.cells, positions, player)) {
+        return error(b);
+      }
+    } */
     const cells = _.cloneDeep(b.cells)
     const nextPlayer = ((player + 1) % b.settings.players) || b.settings.players
     for (const {i, j} of positions) {

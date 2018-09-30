@@ -31,7 +31,7 @@ export default class Game extends React.PureComponent {
       2,
       ominos()[5],
       { rotations: 1, flips: 0 },
-      2,
+      8,
       3
     );
   }
@@ -52,12 +52,19 @@ export default class Game extends React.PureComponent {
 
   updateCanvasBoard() {
     const { board, hoveredCell, currentColor } = this.state
+    const cells = board.cells
+    const dimensions = {
+      rows: board.settings.rows,
+      cols: board.settings.cols,
+    }
     this.canvasBoard.set({
-      board,
+      dimensions,
+      cells,
       currentColor,
       hoveredCell,
     })
     this.canvasBoard.render()
+    console.log(board)
   }
 
   handleHoverCell = (hoveredCell) => {

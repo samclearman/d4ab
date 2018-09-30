@@ -41,18 +41,22 @@ class OminoCanvas extends React.PureComponent {
     const { omino, currentColor } = this.props
     if (!omino) return
     const unpaddedOmino = unpadded(omino)
-    const board = reducers.place(
-      reducers.initialize(null, this.cols, this.rows),
-      1,
-      unpaddedOmino,
-      { rotations: 0, flips: 0 },
-      0,
-      0,
-    );
-
+    const dimensions = {
+      rows: this.rows,
+      cols: this.cols,
+    }
+    const cells = []
+    unpaddedOmino.forEach((row, i) => row.forEach((val, j) => {
+      cells.push({
+        i,
+        j,
+        val,
+      })
+    }))
     const theme = makeTheme(currentColor)
     this.canvasBoard.set({
-      board,
+      dimensions,
+      cells,
       theme,
     })
     this.canvasBoard.render()
