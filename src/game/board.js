@@ -3,9 +3,22 @@ import _ from 'lodash'
 import { ominos, transformed } from './ominos';
 
 const WIDTH = 20;
+const HEIGHT = 20;
 
 const error = (b) => {
   return { ...b, error: true };
+}
+
+const inBounds = (cells, positions) => {
+  if (!positions.length) {
+    positions = [positions]
+  }
+  for (const {i, j} of positions) {
+    if (i < 0 || i > WIDTH || j < 0 || j > HEIGHT) {
+      return false
+    }
+  }
+  return true
 }
 
 const vacant = (cells, positions) => {
@@ -16,6 +29,14 @@ const vacant = (cells, positions) => {
   }
   return true;
 };
+
+const sharesEdgeWith = (cells, positions, player) => {
+  return false;
+}
+
+const sharesVertexWith = (cells, positions, player) => {
+  return true;
+}
 
 export const reducers = {
   initialize(b, cols, rows, players=4) {
@@ -88,7 +109,16 @@ export const reducers = {
         }
       }
     }
+    if (!inBounds(b.cells, positions)) {
+      return error(b);
+    }
     if (!vacant(b.cells, positions)) {
+      return error(b);
+    }
+    if (sharesEdgeWith(b.cells, positions, player)) {
+      return error(b);
+    }
+    if (!sharesVertexWith(b.cells, positions, player)) {
       return error(b);
     }
     const cells = _.cloneDeep(b.cells)
