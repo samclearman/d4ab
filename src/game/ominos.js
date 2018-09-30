@@ -1,6 +1,38 @@
 import pad from 'array-pad';
+import _ from 'lodash';
 
-export const ominos = function () {
+export const unpadded = (omino) => {
+  let R = 0
+  let C = 0
+  omino.forEach((row, i) => {
+    row.forEach((cell, j) => {
+      if (cell) {
+        R = Math.max(R, i)
+        C = Math.max(C, j)
+      }
+    })
+  })
+  return _.range(R).map(i => (
+    _.range(C).map(j => (
+      omino[i][j]
+    ))
+  ))
+}
+
+const padded = (omino) => {
+  const N = Math.max(
+    omino.length,
+    omino.map(r => r.length).reduce((x, y) => Math.max(x, y))
+  );
+  const padded = [];
+  for (let i = 0; i < N; i++) {
+    const r = omino[i] || [];
+    padded.push(pad(r, N, 0));
+  }
+  return padded;
+};
+
+export const ominos = () => {
   return(
     [
       [[1]],
@@ -25,31 +57,16 @@ export const ominos = function () {
       
       [[1, 1],
        [1, 1]],
-    ]
+    ].map(padded)
   );
 };
 
 // The number of squares in the omino
-const size = function (omino) {
+const size = (omino) => {
   return omino.map(r => r.reduce((x, y) => x + y)).reduce((x, y) => x + y);
 }
 
-const padded = function (omino, N = null) {
-  if (N === null) {
-    N = Math.max(
-      omino.length,
-      omino.map(r => r.length).reduce((x, y) => Math.max(x, y))
-    );
-  }
-  const padded = [];
-  for (let i = 0; i < N; i++) {
-    const r = omino[i] || [];
-    padded.push(pad(r, N, 0));
-  }
-  return padded;
-};
-
-const rotated = function(paddedOmino) {
+const rotated = (paddedOmino) => {
   const N = paddedOmino.length;
   const rotated = [];
   for (let i = 0; i < N; i++) {
@@ -63,7 +80,7 @@ const rotated = function(paddedOmino) {
   return rotated;
 };
 
-const flipped = function(paddedOmino) {
+const flipped = (paddedOmino) => {
   const N = paddedOmino.length;
   const flipped = paddedOmino.map(r => {
     const rr = [];
@@ -77,8 +94,7 @@ const flipped = function(paddedOmino) {
 
 // A transformation is an object of the form { rotations: i, flips: j }
 // where i <= 3, j <= 1
-export const transformed = function (omino, transformation) {
-  omino = padded(omino);
+export const transformed = (omino, transformation) => {
   for (let i = 0; i < transformation.rotations; i++) {
     omino = rotated(omino);
   }
