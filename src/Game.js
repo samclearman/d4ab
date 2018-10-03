@@ -1,6 +1,6 @@
 import React from 'react'
 import _ from 'lodash'
-import CanvasBoard, { DEFAULT_THEME } from './graphics/canvasBoard'
+import CanvasBoard, { ANGELA_THEME } from './graphics/canvasBoard'
 import { RANDOM_BOARD, reducers, validatePlace } from './game/board'
 import { ominos } from './game/ominos'
 import OminoSelector from './OminoSelector'
@@ -21,7 +21,7 @@ export default class Game extends React.PureComponent {
         flips: 0,
       },
       staged: false,
-      theme: DEFAULT_THEME,
+      theme: ANGELA_THEME,
     }
     this.state.board = reducers.place(
       this.state.board,
@@ -177,13 +177,12 @@ export default class Game extends React.PureComponent {
   render() {
     const containerStyle = {
       display: 'flex',
-      flexDirection: 'column',
-      alignSelf: 'center',
-      margin: '0 auto',
     }
+
     return (
       <div style={containerStyle}>
         {this.renderCanvasBoard()}
+        <div style={{ width: '60px' }} />
         {this.renderOminoSelector()}
         {this.renderConfirmButton()}
       </div>

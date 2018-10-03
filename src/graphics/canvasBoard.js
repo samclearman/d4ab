@@ -15,6 +15,18 @@ export const DEFAULT_THEME = {
   ],
 }
 
+export const ANGELA_THEME = {
+  gridBackground: '#fcfcfc',
+  gridLine: 'white',
+  colors: [
+    'white',
+    '#6bd5e1',
+    '#ffd98e',
+    '#ffb677',
+    '#ff8364',
+  ],
+}
+
 export const makeTheme = (color) => ({
   gridBackground: 'white',
   gridLine: 'white',
@@ -26,7 +38,7 @@ export const makeTheme = (color) => ({
 
 export default class CanvasBoard extends EventEmitter {
   constructor({
-    theme = DEFAULT_THEME
+    theme = ANGELA_THEME
   } = {}) {
     super()
     this.theme = theme
@@ -161,8 +173,6 @@ export default class CanvasBoard extends EventEmitter {
       }
     } else {
       ctx.fillStyle = getHexStr8(color, 1.0)
-      ctx.fillRect(x, y, cellSize, cellSize)
-      ctx.fillStyle = getHexStr8('white', 0.5)
       ctx.fillRect(x, y, cellSize, cellSize)
     }
   }
