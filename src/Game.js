@@ -76,6 +76,10 @@ export default class Game extends React.PureComponent {
     return validatePlace(board, this.playerIndex, selectedOminoIdx, currentTransformation, cell.i, cell.j)
   }
 
+  get canConfirm() {
+    return this.state.staged && this.currentPieceIsValid;
+  }
+
   updateCanvasBoard() {
     const { board, cell, selectedOminoIdx, currentTransformation, staged } = this.state
     const cells = board.cells
@@ -148,7 +152,7 @@ export default class Game extends React.PureComponent {
 
   handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      this.handleConfirm()
+      if (this.canConfirm) this.handleConfirm()
     } else if (_.includes(['ArrowRight', 'ArrowLeft', 'ArrowUp'], e.key)) {
       this.handleTransformation(e.key)
     } else if (e.key === 'Tab') {
@@ -225,15 +229,14 @@ export default class Game extends React.PureComponent {
   }
 
   renderConfirmButton() {
-    const canConfirm = this.state.staged && this.currentPieceIsValid;
     const buttonStyle = {
       fontFamily: 'Roboto Condensed',
       fontSize: '20px',
       fontWeight: 'bold',
       textTransform: 'uppercase',
       letterSpacing: '3px',
-      opacity: canConfirm ? 1 : 0.2,
-      cursor: canConfirm ? 'pointer' : 'not-allowed',
+      opacity: this.canConfirm ? 1 : 0.2,
+      cursor: this.canConfirm ? 'pointer' : 'not-allowed',
     }
 
     return (
