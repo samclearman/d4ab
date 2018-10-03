@@ -71,7 +71,6 @@ export default class Game extends React.PureComponent {
   }
 
   get currentPieceIsValid() {
-    console.log('valid?')
     const { board, cell, selectedOminoIdx, currentTransformation } = this.state
     if (!cell || !selectedOminoIdx) return false
     return validatePlace(board, this.playerIndex, selectedOminoIdx, currentTransformation, cell.i, cell.j)

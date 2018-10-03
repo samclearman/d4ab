@@ -34,7 +34,6 @@ class OminoCanvas extends React.PureComponent {
   get cols() {
     const { ominoIdx } = this.props
     const omino = getOmino(ominoIdx);
-    console.log(omino)
     if (!omino) debugger
     const unpaddedOmino = unpadded(omino)
     return unpaddedOmino[0].length
@@ -125,7 +124,6 @@ export default class OminoSelector extends React.PureComponent {
       gridTemplateColumns: 'auto auto auto',
     }
 
-    console.log('REMAINING:', this.props.ominosRemaining)
     return (
       <div style={containerStyle}>
         {_.keys(this.props.ominosRemaining).map((ominoIdx, i) => ( this.props.ominosRemaining[ominoIdx] &&

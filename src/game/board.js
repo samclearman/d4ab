@@ -154,7 +154,6 @@ export const reducers = {
   },
 
   place(b, player, ominoIdx, transformation, x, y) {
-    console.log('placing')
     const omino = getOmino(ominoIdx)
     if (!validatePlace(b, player, ominoIdx, transformation, x, y)) {
       return error(b)

@@ -227,7 +227,6 @@ export default class CanvasBoard extends EventEmitter {
       staged,
       transformation,
     } = ghost
-    console.log(omino, transformation)
     if (!omino || !cell) return
     const transformedOmino = transformed(omino, transformation)
     const currentColor = this.currentColor
