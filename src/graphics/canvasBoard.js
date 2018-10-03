@@ -21,10 +21,10 @@ export const ANGELA_THEME = {
   gridLine: 'white',
   colors: [
     'white',
-    '#6bd5e1',
-    '#ffd98e',
-    '#ffb677',
-    '#ff8364',
+    '#E1B16A',
+    '#78A5A3',
+    '#CE5A57',
+    '#444C5C',
   ],
 }
 
