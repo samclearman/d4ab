@@ -13,7 +13,7 @@ export default class Game extends React.PureComponent {
     this.canvasBoard = new CanvasBoard()
     this.state = {
       board: RANDOM_BOARD,
-      hoveredCell: null,
+      cell: null,
       selectedOmino: null,
       pieces: [],
       currentTransformation: {
@@ -66,19 +66,19 @@ export default class Game extends React.PureComponent {
   }
 
   updateCanvasBoard() {
-    const { board, hoveredCell, selectedOmino, currentTransformation, staged } = this.state
+    const { board, cell, selectedOmino, currentTransformation, staged } = this.state
     const cells = board.cells
     const dimensions = {
       rows: board.settings.rows,
       cols: board.settings.cols,
     }
     const currentColor = this.currentColor
-    const ghost = (hoveredCell && selectedOmino) ? {
+    const ghost = (cell && selectedOmino) ? {
       omino: selectedOmino,
-      position: hoveredCell,
       transformation: currentTransformation,
-      valid: validatePlace(board, this.playerIndex, selectedOmino, currentTransformation, hoveredCell.i, hoveredCell.j),
+      valid: validatePlace(board, this.playerIndex, selectedOmino, currentTransformation, cell.i, cell.j),
       staged,
+      cell,
     } : null
     this.canvasBoard.set({
       dimensions,
@@ -89,11 +89,31 @@ export default class Game extends React.PureComponent {
     this.canvasBoard.render()
   }
 
-  handleHoverCell = (hoveredCell) => {
-    if (this.state.staged) return
-    if (_.isEqual(hoveredCell, this.state.hoveredCell)) return
+  handleHoverCell = (cell) => {
+    if (this.state.staged) { return }
+    if (_.isEqual(cell, this.state.cell)) { return }
     this.setState({
-      hoveredCell
+      cell
+    })
+  }
+
+  handleTouchUpCell = (cell) => {
+    this.setState({
+      staged: true,
+    })
+  }
+
+  handleTouchMoveCell = (cell) => {
+    this.setState({
+      cell
+    })
+  }
+
+  handleTouchDownCell = (cell) => {
+    this.setState({
+      staged: false,
+    }, () => {
+      this.handleHoverCell(cell)
     })
   }
 
@@ -114,12 +134,13 @@ export default class Game extends React.PureComponent {
   handleSelectOmino = (selectedOmino) => {
     this.setState({
       selectedOmino,
+      cell: null,
       staged: false,
     })
   }
 
   handleConfirm = () => {
-    const cell = this.state.hoveredCell
+    const cell = this.state.cell
     const { board, selectedOmino, currentTransformation } = this.state
     if (!selectedOmino) { return }
     if (!validatePlace(board, this.playerIndex, selectedOmino, currentTransformation, cell.i, cell.j)) { return }

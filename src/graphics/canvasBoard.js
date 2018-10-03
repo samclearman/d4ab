@@ -189,21 +189,20 @@ export default class CanvasBoard extends EventEmitter {
   }
 
   renderGhost() {
-    const hoveredCell = this.hoveredCell
     const ghost = this.ghost
     if (!ghost) return
     const {
       omino,
-      position,
+      cell,
       valid,
       staged,
     } = ghost
-    if (!omino || !position) return
+    if (!omino || !cell) return
     const currentColor = this.currentColor
-    const { i: di, j: dj } = position
+    const { i: di, j: dj } = cell
     omino.forEach((row, i) => {
-      row.forEach((cell, j) => {
-        if (!cell) return
+      row.forEach((val, j) => {
+        if (!val) return
         this.renderCell(i + di, j + dj, currentColor, {
           valid,
           staged,
