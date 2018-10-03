@@ -65,9 +65,6 @@ const sharesVertexWith = (cells, positions, player) => {
 
 export const validatePlace = (b, player, ominoIdx, transformation, x, y) => {
   const omino = getOmino(ominoIdx)
-  if (player !== b.nextPlayer) {
-    return false
-  }
   const positions = getOminoPositions(omino, transformation, x, y)
   if (!inBounds(b.cells, positions)) {
     return false
