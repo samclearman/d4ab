@@ -105,10 +105,10 @@ export const reducers = {
     }
 
     const ominosRemaining = {
-      1: ominos(),
-      2: ominos(),
-      3: ominos(),
-      4: ominos(),
+      1: Array(ominos().length).fill(true),
+      2: Array(ominos().length).fill(true),
+      3: Array(ominos().length).fill(true),
+      4: Array(ominos().length).fill(true),
     }
 
     const nextPlayer = 1;
@@ -148,8 +148,13 @@ export const reducers = {
     }
   },
 
-  place(b, player, omino, transformation, x, y) {
+  place(b, player, ominoIdx, transformation, x, y) {
+    const omino = ominos()[ominoIdx];
     if (!validatePlace(b, player, omino, transformation, x, y)) {
+      return error(b);
+    }
+    const ominosRemaining = _.cloneDeep(b.ominosRemaining[player]);
+    if (!(ominosRemaining[ominoIdx])) {
       return error(b);
     }
     const t = transformed(omino, transformation)
@@ -167,10 +172,12 @@ export const reducers = {
       const cell = cells[(i * WIDTH) + j]
       cell.val = player
     }
+    ominosRemaining[ominoIdx] = false;
     return {
       ...b,
       nextPlayer,
       cells,
+      ominosRemaining,
     }
   },
 }

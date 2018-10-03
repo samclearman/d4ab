@@ -3,7 +3,7 @@ import _ from 'lodash'
 import CanvasBoard, { makeTheme } from './graphics/canvasBoard'
 import GestureListener from './GestureListener'
 import { reducers } from './game/board'
-import { unpadded } from './game/ominos'
+import { ominos, unpadded } from './game/ominos'
 
 class OminoCanvas extends React.PureComponent {
   constructor() {
@@ -26,19 +26,22 @@ class OminoCanvas extends React.PureComponent {
   }
 
   get rows() {
-    const { omino } = this.props
+    const { ominoIdx } = this.props
+    const omino = ominos()[ominoIdx];
     const unpaddedOmino = unpadded(omino)
     return unpaddedOmino.length
   }
 
   get cols() {
-    const { omino } = this.props
+    const { ominoIdx } = this.props
+    const omino = ominos()[ominoIdx];
     const unpaddedOmino = unpadded(omino)
     return unpaddedOmino[0].length
   }
 
   updateCanvasBoard() {
-    const { omino, currentColor } = this.props
+    const { ominoIdx, currentColor } = this.props
+    const omino = ominos()[ominoIdx];
     if (!omino) return
     const unpaddedOmino = unpadded(omino)
     const dimensions = {
@@ -75,7 +78,7 @@ class OminoCanvas extends React.PureComponent {
   }
 
   handleClick = () => {
-    this.props.onSelect(this.props.omino)
+    this.props.onSelect(this.props.ominoIdx)
   }
 
   render() {
@@ -111,8 +114,8 @@ export default class OminoSelector extends React.PureComponent {
     this.props.onSelectOmino(this.props.ominos[this.props.ominos.length - 1])
   }
 
-  handleSelect = omino => {
-    this.props.onSelectOmino(omino)
+  handleSelect = ominoIdx => {
+    this.props.onSelectOmino(ominoIdx)
   }
 
   render() {
@@ -122,12 +125,12 @@ export default class OminoSelector extends React.PureComponent {
     }
     return (
       <div style={containerStyle}>
-        {_.map(this.props.ominos, (omino, i) => (
+        {_.map(this.props.ominosRemaining, (remaining, idx) => ( remaining &&          
           <OminoCanvas
-            key={i}
-            omino={omino}
+            key={idx}
+            ominoIdx={idx}
             currentColor={this.props.currentColor}
-            isSelected={this.props.selectedOmino === omino}
+            isSelected={this.props.selectedOminoIdx === idx}
             onSelect={this.handleSelect}
             onHoverIn={this.handleHoverIn}
             onHoverOut={this.handleHoverOut}/>

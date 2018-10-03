@@ -13,7 +13,7 @@ export default class Game extends React.PureComponent {
     this.state = {
       board: RANDOM_BOARD,
       cell: null,
-      selectedOmino: null,
+      selectedOminoIdx: null,
       pieces: [],
       currentTransformation: {
         rotations: 0,
@@ -78,15 +78,15 @@ export default class Game extends React.PureComponent {
   }
 
   updateCanvasBoard() {
-    const { board, cell, selectedOmino, currentTransformation, staged } = this.state
+    const { board, cell, selectedOminoIdx, currentTransformation, staged } = this.state
     const cells = board.cells
     const dimensions = {
       rows: board.settings.rows,
       cols: board.settings.cols,
     }
     const currentColor = this.currentColor
-    const ghost = (cell && selectedOmino) ? {
-      omino: selectedOmino,
+    const ghost = (cell && selectedOminoIdx) ? {
+      omino: ominos()[selectedOminoIdx],
       transformation: currentTransformation,
       valid: this.currentPieceIsValid,
       staged,
@@ -151,9 +151,9 @@ export default class Game extends React.PureComponent {
     }
   }
 
-  handleSelectOmino = (selectedOmino) => {
+  handleSelectOmino = (selectedOminoIdx) => {
     this.setState({
-      selectedOmino,
+      selectedOminoIdx,
       cell: null,
       staged: false,
     })
@@ -161,12 +161,13 @@ export default class Game extends React.PureComponent {
 
   handleConfirm = () => {
     const cell = this.state.cell
-    const { board, selectedOmino, currentTransformation } = this.state
-    if (!selectedOmino) { return }
+=======
+    const { board, selectedOminoIdx, currentTransformation } = this.state
+    if (selectedOminoIdx === null) { return }
     if (!this.currentPieceIsValid) { return }
     this.setState({
-      board: reducers.place(board, this.playerIndex, selectedOmino, currentTransformation, cell.i, cell.j),
-      selectedOmino: null,
+      board: reducers.place(board, this.playerIndex, selectedOminoIdx, currentTransformation, cell.i, cell.j),
+      selectedOminoIdx: null,
     })
   }
 
@@ -215,8 +216,8 @@ export default class Game extends React.PureComponent {
     return (
       <OminoSelector
         key={this.playerIndex}
-        ominos={this.state.board.ominosRemaining[this.playerIndex]}
-        selectedOmino={this.state.selectedOmino}
+        ominosRemaining={this.state.board.ominosRemaining[this.playerIndex]}
+        selectedOminoIdx={this.state.selectedOminoIdx}
         currentColor={this.currentColor}
         onSelectOmino={this.handleSelectOmino}
       />
