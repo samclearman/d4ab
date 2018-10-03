@@ -168,13 +168,27 @@ export default class Game extends React.PureComponent {
   handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       this.handleConfirm()
-    }
-
-    if (e.key === 'Tab') {
+    } else if (_.includes(['ArrowRight', 'ArrowLeft', 'ArrowUp'], e.key)) {
+      this.handleTransformation(e.key)
+    } else if (e.key === 'Tab') {
       this.handleToggleSpace()
-      e.preventDefault();
-      e.stopPropagation();
+      e.preventDefault()
+      e.stopPropagation()
     }
+  }
+
+  handleTransformation = (transformation) => {
+    this.setState(prevState => {
+      let { rotations, flips } = prevState.currentTransformation;
+      if (transformation === 'ArrowUp') {
+        flips = (flips + 1) % 2;
+      } else {
+        let dr = (transformation === 'ArrowRight') ? 1 : -1;
+        dr *= Math.pow(-1, flips);
+        rotations = (rotations + dr + 4) % 4;
+      }
+      return { currentTransformation: { flips, rotations } };
+    }, this.updateCanvasBoard);
   }
 
   handleSelectOmino = (selectedOminoIdx) => {
