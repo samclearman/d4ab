@@ -161,7 +161,6 @@ export default class Game extends React.PureComponent {
 
   handleConfirm = () => {
     const cell = this.state.cell
-=======
     const { board, selectedOminoIdx, currentTransformation } = this.state
     if (selectedOminoIdx === null) { return }
     if (!this.currentPieceIsValid) { return }
