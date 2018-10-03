@@ -76,6 +76,7 @@ export default class Game extends React.PureComponent {
     this.canvasBoard.off('touchstartcell', this.handleTouchStartCell)
     this.canvasBoard.off('touchmovecell', this.handleTouchMoveCell)
     this.canvasBoard.off('touchend', this.handleTouchEnd)
+
     window.removeEventListener('keydown', this.handleKeyDown)
   }
 
@@ -229,16 +230,22 @@ export default class Game extends React.PureComponent {
   renderConfirmButton() {
     const canConfirm = this.state.staged && this.currentPieceIsValid;
     const buttonStyle = {
+      fontFamily: 'Roboto Condensed',
+      fontSize: '20px',
+      fontWeight: 'bold',
+      textTransform: 'uppercase',
+      letterSpacing: '3px',
       opacity: canConfirm ? 1 : 0.2,
+      cursor: canConfirm ? 'pointer' : 'not-allowed',
     }
 
     return (
-      <button
+      <div
         style={buttonStyle}
         onClick={this.handleConfirm}
       >
-        Confirm (Enter ↵)
-      </button>
+        Confirm <em>[Enter ↵]</em>
+      </div>
     )
   }
 
