@@ -1,33 +1,53 @@
-import pad from 'array-pad'
 import _ from 'lodash'
 
+const OMINO_SIZE = 5
+
 export const unpadded = (omino) => {
-  let R = 0
-  let C = 0
+  let maxR = 0
+  let minR = OMINO_SIZE
+  let maxC = 0
+  let minC = OMINO_SIZE
   omino.forEach((row, i) => {
     row.forEach((cell, j) => {
       if (cell) {
-        R = Math.max(R, i + 1)
-        C = Math.max(C, j + 1)
+        maxR = Math.max(maxR, i + 1)
+        maxC = Math.max(maxC, j + 1)
+        minR = Math.min(minR, i)
+        minC = Math.min(minC, j)
       }
     })
   })
-  return _.range(R).map(i => (
-    _.range(C).map(j => (
+  return _.range(minR, maxR).map(i => (
+    _.range(minC, maxC).map(j => (
       omino[i][j]
     ))
   ))
 }
 
 const padded = (omino) => {
-  const N = Math.max(
-    omino.length,
-    omino.map(r => r.length).reduce((x, y) => Math.max(x, y))
-  );
+  omino = unpadded(omino)
+  const height = omino.length
+  const width = omino.map(r => r.length).reduce((x, y) => Math.max(x, y))
+  const N = OMINO_SIZE;
+
+  const padTop = Math.floor((N - height) / 2.0);
+  const padBottom = Math.ceil((N - height) / 2.0);
+  const padLeft = Math.floor((N - width) / 2.0);
+  const padRight = Math.ceil((N - width) / 2.0);
+
   const padded = [];
-  for (let i = 0; i < N; i++) {
-    const r = omino[i] || [];
-    padded.push(pad(r, N, 0));
+  for (let i = 0; i < padTop; i++) {
+    padded.push(Array(N).fill(0));
+  }
+
+  for (let i = 0; i < height; i++) {
+    const r = omino[i];
+    const paddedRow = _.concat(Array(padLeft).fill(0), r, Array(padRight).fill(0));
+    padded.push(paddedRow);
+  }
+
+  for (let i = 0; i < padBottom; i++) {
+    padded.push(Array(N).fill(0));
   }
   return padded;
 };
@@ -131,6 +151,7 @@ const flipped = (paddedOmino) => {
 // A transformation is an object of the form { rotations: i, flips: j }
 // where i <= 3, j <= 1
 export const transformed = (omino, transformation) => {
+  omino = padded(omino)
   for (let i = 0; i < transformation.rotations; i++) {
     omino = rotated(omino);
   }
