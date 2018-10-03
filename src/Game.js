@@ -4,6 +4,7 @@ import CanvasBoard, { ANGELA_THEME } from './graphics/canvasBoard'
 import { RANDOM_BOARD, reducers, validatePlace } from './game/board'
 import { getOmino } from './game/ominos'
 import OminoSelector from './OminoSelector'
+import { eventList } from './game/events'
 
 const SPACES = {
   BOARD: 'board',
@@ -33,6 +34,11 @@ export default class Game extends React.PureComponent {
     this.canvasBoard = new CanvasBoard({
       theme: this.state.theme,
     })
+
+    this.eventList = eventList(
+      () => {this.state},
+      (newState) => {this.setState(newState)}
+    )
 
     this.handleKeyDown = this.handleKeyDown.bind(this);
   }
