@@ -38,7 +38,7 @@ export const makeTheme = (color) => ({
 
 export default class CanvasBoard extends EventEmitter {
   constructor({
-    theme = ANGELA_THEME
+    theme = DEFAULT_THEME,
   } = {}) {
     super()
     this.theme = theme

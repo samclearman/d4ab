@@ -10,7 +10,6 @@ export default class Game extends React.PureComponent {
     super()
     this.container = React.createRef()
     this.canvas = React.createRef()
-    this.canvasBoard = new CanvasBoard()
     this.state = {
       board: RANDOM_BOARD,
       cell: null,
@@ -23,6 +22,9 @@ export default class Game extends React.PureComponent {
       staged: false,
       theme: ANGELA_THEME,
     }
+    this.canvasBoard = new CanvasBoard({
+      theme: this.state.theme,
+    })
     this.state.board = reducers.place(
       this.state.board,
       1,
