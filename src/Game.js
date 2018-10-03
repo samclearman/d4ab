@@ -55,9 +55,10 @@ export default class Game extends React.PureComponent {
   }
 
   get currentPieceIsValid() {
-    const { board, cell, selectedOmino, currentTransformation } = this.state
-    if (!cell || !selectedOmino) return false
-    return validatePlace(board, this.playerIndex, selectedOmino, currentTransformation, cell.i, cell.j)
+    console.log('valid?')
+    const { board, cell, selectedOminoIdx, currentTransformation } = this.state
+    if (!cell || !selectedOminoIdx) return false
+    return validatePlace(board, this.playerIndex, selectedOminoIdx, currentTransformation, cell.i, cell.j)
   }
 
   updateCanvasBoard() {

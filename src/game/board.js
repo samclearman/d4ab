@@ -61,7 +61,8 @@ const sharesVertexWith = (cells, positions, player) => {
   return false;
 }
 
-export const validatePlace = (b, player, omino, transformation, x, y) => {
+export const validatePlace = (b, player, ominoIdx, transformation, x, y) => {
+  const omino = ominos()[ominoIdx];
   if (player !== b.nextPlayer) {
     return false
   }
@@ -149,8 +150,9 @@ export const reducers = {
   },
 
   place(b, player, ominoIdx, transformation, x, y) {
+    console.log('placing');
     const omino = ominos()[ominoIdx];
-    if (!validatePlace(b, player, omino, transformation, x, y)) {
+    if (!validatePlace(b, player, ominoIdx, transformation, x, y)) {
       return error(b);
     }
     const ominosRemaining = _.cloneDeep(b.ominosRemaining[player]);
