@@ -189,6 +189,10 @@ export default class Game extends React.PureComponent {
       selectedOminoIdx,
       cell: null,
       staged: false,
+      currentTransformation: {
+        rotations: 0,
+        flips: 0,
+      },
     })
   }
 
