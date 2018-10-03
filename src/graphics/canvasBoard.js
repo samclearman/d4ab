@@ -128,7 +128,6 @@ export default class CanvasBoard extends EventEmitter {
     ctx.fillRect(0, 0, this.width, this.height)
   }
 
-
   renderGridLines() {
     const canvas = this.canvas
     const ctx = canvas.getContext('2d')

@@ -196,7 +196,9 @@ export default class Game extends React.PureComponent {
   }
 
   renderConfirmButton() {
+    const canConfirm = this.state.staged && this.currentPieceIsValid;
     const buttonStyle = {
+      opacity: canConfirm ? 1 : 0.2,
     }
 
     return (
