@@ -36,8 +36,8 @@ export default class Game extends React.PureComponent {
     })
 
     this.eventList = eventList(
-      () => {this.state},
-      (newState) => {this.setState(newState)}
+      () => (this.state),
+      (newState) => {this.setState(newState)},
     )
 
     this.handleKeyDown = this.handleKeyDown.bind(this);
@@ -208,8 +208,15 @@ export default class Game extends React.PureComponent {
     if (!selectedOminoIdx) { return }
     if (!this.currentPieceIsValid) { return }
     this.setState({
-      board: reducers.place(board, this.playerIndex, selectedOminoIdx, currentTransformation, cell.i, cell.j),
       selectedOminoIdx: null,
+    })
+
+    this.eventList.dispatch({
+      type: 'place',
+      playerIndex: this.playerIndex,
+      selectedOminoIdx,
+      currentTransformation,
+      cell,
     })
   }
 

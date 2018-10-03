@@ -3,10 +3,10 @@ import { reducers } from './board'
 const events = [];
 
 const handlers = {
-  place: (event, gameState) => {
+  place: (gameState, event) => {
     const board = gameState.board;
-    const newBoard = reducers.place(board, this.playerIndex, event.selectedOminoIdx, event.currentTransformation, event.cell.i, event.cell.j);
-    return { newBoard };
+    const newBoard = reducers.place(board, event.playerIndex, event.selectedOminoIdx, event.currentTransformation, event.cell.i, event.cell.j);
+    return { board: newBoard };
   }
 }
 
