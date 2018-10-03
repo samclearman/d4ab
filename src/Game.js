@@ -20,6 +20,7 @@ export default class Game extends React.PureComponent {
         rotations: 0,
         flips: 0,
       },
+      staged: false,
       theme: DEFAULT_THEME,
     }
     this.state.board = reducers.place(
@@ -65,7 +66,7 @@ export default class Game extends React.PureComponent {
   }
 
   updateCanvasBoard() {
-    const { board, hoveredCell, selectedOmino, currentTransformation } = this.state
+    const { board, hoveredCell, selectedOmino, currentTransformation, staged } = this.state
     const cells = board.cells
     const dimensions = {
       rows: board.settings.rows,
@@ -77,6 +78,7 @@ export default class Game extends React.PureComponent {
       position: hoveredCell,
       transformation: currentTransformation,
       valid: validatePlace(board, this.playerIndex, selectedOmino, currentTransformation, hoveredCell.i, hoveredCell.j),
+      staged,
     } : null
     this.canvasBoard.set({
       dimensions,
@@ -88,6 +90,7 @@ export default class Game extends React.PureComponent {
   }
 
   handleHoverCell = (hoveredCell) => {
+    if (this.state.staged) return
     if (_.isEqual(hoveredCell, this.state.hoveredCell)) return
     this.setState({
       hoveredCell
@@ -95,20 +98,34 @@ export default class Game extends React.PureComponent {
   }
 
   handleClickCell = (cell) => {
-    const { board, selectedOmino, currentTransformation } = this.state
-    if (!selectedOmino) { return }
-    if (!validatePlace(board, this.playerIndex, selectedOmino, currentTransformation, cell.i, cell.j)) { return }
-
-    console.log('placing piece')
-    this.setState({
-      board: reducers.place(board, this.playerIndex, selectedOmino, currentTransformation, cell.i, cell.j),
-      selectedOmino: null,
-    })
+    if (this.state.staged) {
+      this.setState({
+        staged: false,
+      }, () => {
+        this.handleHoverCell(cell)
+      })
+    } else {
+      this.setState({
+        staged: true,
+      })
+    }
   }
 
   handleSelectOmino = (selectedOmino) => {
     this.setState({
       selectedOmino,
+      staged: false,
+    })
+  }
+
+  handleConfirm = () => {
+    const cell = this.state.hoveredCell
+    const { board, selectedOmino, currentTransformation } = this.state
+    if (!selectedOmino) { return }
+    if (!validatePlace(board, this.playerIndex, selectedOmino, currentTransformation, cell.i, cell.j)) { return }
+    this.setState({
+      board: reducers.place(board, this.playerIndex, selectedOmino, currentTransformation, cell.i, cell.j),
+      selectedOmino: null,
     })
   }
 
@@ -133,6 +150,20 @@ export default class Game extends React.PureComponent {
     )
   }
 
+  renderConfirmButton() {
+    const buttonStyle = {
+    }
+
+    return (
+      <button
+        style={buttonStyle}
+        onClick={this.handleConfirm}
+      >
+        Confirm
+      </button>
+    )
+  }
+
   renderOminoSelector() {
     return (
       <OminoSelector
@@ -154,6 +185,7 @@ export default class Game extends React.PureComponent {
       <div style={containerStyle}>
         {this.renderCanvasBoard()}
         {this.renderOminoSelector()}
+        {this.renderConfirmButton()}
       </div>
     )
   }

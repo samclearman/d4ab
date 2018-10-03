@@ -58,6 +58,7 @@ export default class CanvasBoard extends EventEmitter {
     dimensions,
     ghost,
     currentColor,
+    staged,
   }) {
     if (theme !== undefined) this.theme = theme
     if (cells !== undefined) this.cells = cells
@@ -135,21 +136,28 @@ export default class CanvasBoard extends EventEmitter {
     ctx.stroke()
   }
 
-  renderCell(i, j, color, { ghost = false, valid = false } = {} ) {
+  renderCell(i, j, color, { ghost = false, valid = false, staged = false } = {} ) {
     const canvas = this.canvas,
           ctx = canvas.getContext('2d'),
           cellSize = this.cellSize
     const x = j * cellSize
     const y = i * cellSize
     if (ghost) {
-      if (valid) {
-        ctx.fillStyle = getHexStr8(color, 0.6)
+      if (staged) {
+        ctx.fillStyle = getHexStr8(color, 1.0)
         ctx.fillRect(x, y, cellSize, cellSize)
-        ctx.fillStyle = getHexStr8('#cccccc', 0.6)
+        ctx.fillStyle = getHexStr8('white', 0.3)
         ctx.fillRect(x, y, cellSize, cellSize)
       } else {
-        ctx.fillStyle = getHexStr8('#cccccc', 0.6)
-        ctx.fillRect(x, y, cellSize, cellSize)
+        if (valid) {
+          ctx.fillStyle = getHexStr8(color, 0.6)
+          ctx.fillRect(x, y, cellSize, cellSize)
+          ctx.fillStyle = getHexStr8('#cccccc', 0.6)
+          ctx.fillRect(x, y, cellSize, cellSize)
+        } else {
+          ctx.fillStyle = getHexStr8('#cccccc', 0.6)
+          ctx.fillRect(x, y, cellSize, cellSize)
+        }
       }
     } else {
       ctx.fillStyle = getHexStr8(color, 1.0)
@@ -178,6 +186,7 @@ export default class CanvasBoard extends EventEmitter {
       omino,
       position,
       valid,
+      staged,
     } = ghost
     if (!omino || !position) return
     const currentColor = this.currentColor
@@ -187,6 +196,7 @@ export default class CanvasBoard extends EventEmitter {
         if (!cell) return
         this.renderCell(i + di, j + dj, currentColor, {
           valid,
+          staged,
           ghost: true,
         })
       })
