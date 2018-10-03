@@ -160,3 +160,18 @@ export const transformed = (omino, transformation) => {
   }
   return omino;
 };
+
+// Return cells occupied by omino
+export const getOminoPositions = (omino, transformation, x, y) => {
+  const t = transformed(omino, transformation)
+  const positions = []
+  const offset = Math.floor(OMINO_SIZE / 2)
+  for (let i = 0; i < t.length; i++) {
+    for (let j = 0; j < t[i].length; j++) {
+      if (t[i][j]) {
+        positions.push({i: x + i - offset, j: y + j - offset})
+      }
+    }
+  }
+  return positions
+};

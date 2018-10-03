@@ -1,6 +1,6 @@
 import EventEmitter from 'events'
 import { getHexStr8 } from './utils'
-import { transformed } from '../game/ominos';
+import { transformed, getOminoPositions } from '../game/ominos';
 
 export const DEFAULT_THEME = {
   // https://www.color-hex.com/color/e5f2ff
@@ -228,17 +228,14 @@ export default class CanvasBoard extends EventEmitter {
       transformation,
     } = ghost
     if (!omino || !cell) return
-    const transformedOmino = transformed(omino, transformation)
     const currentColor = this.currentColor
-    const { i: di, j: dj } = cell
-    transformedOmino.forEach((row, i) => {
-      row.forEach((val, j) => {
-        if (!val) return
-        this.renderCell(i + di, j + dj, currentColor, {
-          valid,
-          staged,
-          ghost: true,
-        })
+    const { i: x, j: y } = cell
+    const positions = getOminoPositions(omino, transformation, x, y)
+    positions.forEach(({ i, j }) => {
+      this.renderCell(i, j, currentColor, {
+        valid,
+        staged,
+        ghost: true,
       })
     })
   }

@@ -1,6 +1,6 @@
 import _ from 'lodash'
 
-import { getOmino, TOTAL_OMINOS, transformed } from './ominos';
+import { getOmino, TOTAL_OMINOS, transformed, getOminoPositions } from './ominos';
 
 const WIDTH = 20;
 const HEIGHT = 20;
@@ -66,15 +66,7 @@ export const validatePlace = (b, player, ominoIdx, transformation, x, y) => {
   if (player !== b.nextPlayer) {
     return false
   }
-  const t = transformed(omino, transformation)
-  const positions = []
-  for (let i = 0; i < t.length; i++) {
-    for (let j = 0; j < t[i].length; j++) {
-      if (t[i][j]) {
-        positions.push({i: x + i, j: y + j})
-      }
-    }
-  }
+  const positions = getOminoPositions(omino, transformation, x, y)
   if (!inBounds(b.cells, positions)) {
     return false
   }
@@ -162,16 +154,8 @@ export const reducers = {
     if (!(ominosRemaining[player][ominoIdx])) {
       return error(b)
     }
-    const t = transformed(omino, transformation)
-    const positions = []
-    for (let i = 0; i < t.length; i++) {
-      for (let j = 0; j < t[i].length; j++) {
-        if (t[i][j]) {
-          positions.push({i: x + i, j: y + j})
-        }
-      }
-    }
     const cells = _.cloneDeep(b.cells)
+    const positions = getOminoPositions(omino, transformation, x, y)
     const nextPlayer = ((player + 1) % b.settings.players) || b.settings.players
     for (const {i, j} of positions) {
       const cell = cells[(i * WIDTH) + j]
