@@ -2,7 +2,7 @@ import React from 'react'
 import _ from 'lodash'
 import CanvasBoard, { ANGELA_THEME } from './graphics/canvasBoard'
 import { RANDOM_BOARD, reducers, validatePlace } from './game/board'
-import { ominos } from './game/ominos'
+import { getOmino } from './game/ominos'
 import OminoSelector from './OminoSelector'
 
 const SPACES = {
@@ -33,24 +33,6 @@ export default class Game extends React.PureComponent {
     this.canvasBoard = new CanvasBoard({
       theme: this.state.theme,
     })
-
-    // this.state.board = reducers.place(
-    //   this.state.board,
-    //   1,
-    //   ominos()[5],
-    //   { rotations: 1, flips: 1 },
-    //   2,
-    //   3
-    // );
-
-    // this.state.board = reducers.place(
-    //   this.state.board,
-    //   2,
-    //   ominos()[5],
-    //   { rotations: 1, flips: 0 },
-    //   8,
-    //   3
-    // );
 
     this.handleKeyDown = this.handleKeyDown.bind(this);
   }
@@ -104,7 +86,7 @@ export default class Game extends React.PureComponent {
     }
     const currentColor = this.currentColor
     const ghost = (cell && selectedOminoIdx) ? {
-      omino: ominos()[selectedOminoIdx],
+      omino: getOmino(selectedOminoIdx),
       transformation: currentTransformation,
       valid: this.currentPieceIsValid,
       staged,
@@ -208,7 +190,7 @@ export default class Game extends React.PureComponent {
   handleConfirm = () => {
     const cell = this.state.cell
     const { board, selectedOminoIdx, currentTransformation } = this.state
-    if (selectedOminoIdx === null) { return }
+    if (!selectedOminoIdx) { return }
     if (!this.currentPieceIsValid) { return }
     this.setState({
       board: reducers.place(board, this.playerIndex, selectedOminoIdx, currentTransformation, cell.i, cell.j),

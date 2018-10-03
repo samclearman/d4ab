@@ -1,6 +1,6 @@
 import _ from 'lodash'
 
-import { ominos, transformed } from './ominos';
+import { getOmino, TOTAL_OMINOS, transformed } from './ominos';
 
 const WIDTH = 20;
 const HEIGHT = 20;
@@ -62,7 +62,7 @@ const sharesVertexWith = (cells, positions, player) => {
 }
 
 export const validatePlace = (b, player, ominoIdx, transformation, x, y) => {
-  const omino = ominos()[ominoIdx];
+  const omino = getOmino(ominoIdx)
   if (player !== b.nextPlayer) {
     return false
   }
@@ -105,11 +105,15 @@ export const reducers = {
       cols,
     }
 
+    const initialOminoBag = _.reduce(_.range(1, TOTAL_OMINOS + 1), (r, k) => ({
+        ...r,
+        [k]: true,
+      }), {})
     const ominosRemaining = {
-      1: Array(ominos().length).fill(true),
-      2: Array(ominos().length).fill(true),
-      3: Array(ominos().length).fill(true),
-      4: Array(ominos().length).fill(true),
+      1: initialOminoBag,
+      2: initialOminoBag,
+      3: initialOminoBag,
+      4: initialOminoBag,
     }
 
     const nextPlayer = 1;
@@ -151,11 +155,11 @@ export const reducers = {
 
   place(b, player, ominoIdx, transformation, x, y) {
     console.log('placing');
-    const omino = ominos()[ominoIdx];
+    const omino = getOmino(ominoIdx)
     if (!validatePlace(b, player, ominoIdx, transformation, x, y)) {
       return error(b);
     }
-    const ominosRemaining = _.cloneDeep(b.ominosRemaining[player]);
+    const ominosRemaining = { ...b.ominosRemaining[player] };
     if (!(ominosRemaining[ominoIdx])) {
       return error(b);
     }

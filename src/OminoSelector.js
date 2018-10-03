@@ -2,7 +2,7 @@ import React from 'react'
 import _ from 'lodash'
 import CanvasBoard, { makeTheme } from './graphics/canvasBoard'
 import GestureListener from './GestureListener'
-import { ominos, unpadded } from './game/ominos'
+import { getOmino, unpadded } from './game/ominos'
 
 class OminoCanvas extends React.PureComponent {
   constructor() {
@@ -26,21 +26,23 @@ class OminoCanvas extends React.PureComponent {
 
   get rows() {
     const { ominoIdx } = this.props
-    const omino = ominos()[ominoIdx];
+    const omino = getOmino(ominoIdx);
     const unpaddedOmino = unpadded(omino)
     return unpaddedOmino.length
   }
 
   get cols() {
     const { ominoIdx } = this.props
-    const omino = ominos()[ominoIdx];
+    const omino = getOmino(ominoIdx);
+    console.log(omino)
+    if (!omino) debugger
     const unpaddedOmino = unpadded(omino)
     return unpaddedOmino[0].length
   }
 
   updateCanvasBoard() {
     const { ominoIdx, currentColor } = this.props
-    const omino = ominos()[ominoIdx];
+    const omino = getOmino(ominoIdx)
     if (!omino) return
     const unpaddedOmino = unpadded(omino)
     const dimensions = {
@@ -125,12 +127,12 @@ export default class OminoSelector extends React.PureComponent {
 
     return (
       <div style={containerStyle}>
-        {_.map(this.props.ominosRemaining, (remaining, idx) => ( remaining &&
+        {_.keys(this.props.ominosRemaining).map((ominoIdx, i) => ( this.props.ominosRemaining[ominoIdx] &&
           <OminoCanvas
-            key={idx}
-            ominoIdx={idx}
+            key={ominoIdx}
+            ominoIdx={ominoIdx}
             currentColor={this.props.currentColor}
-            isSelected={this.props.selectedOminoIdx === idx}
+            isSelected={this.props.selectedOminoIdx === ominoIdx}
             onSelect={this.handleSelect}
             onHoverIn={this.handleHoverIn}
             onHoverOut={this.handleHoverOut}/>
