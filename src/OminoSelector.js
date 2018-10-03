@@ -1,7 +1,6 @@
 import React from 'react'
 import _ from 'lodash'
 import CanvasBoard, { makeTheme } from './graphics/canvasBoard'
-import GestureListener from './GestureListener'
 import { getOmino, unpadded } from './game/ominos'
 
 class OminoCanvas extends React.PureComponent {
@@ -82,28 +81,30 @@ class OminoCanvas extends React.PureComponent {
   }
 
   render() {
-    const canvasStyle = {
-      position: 'absolute',
-      top: '50%',
-      left: '50%',
-      transform: 'translateX(-50%) translateY(-50%)',
-    }
-
     const containerStyle = {
-      margin: '30px',
-      width: this.cols * 20,
-      height: this.rows * 20,
-      position: 'relative',
-      cursor: 'pointer',
+      padding: '32px',
       opacity: this.props.isSelected ? 1 : (this.state.isHovering ? 0.5 : 0.2),
       transition: 'all 0.2s',
+      cursor: 'pointer',
+    }
+
+    const canvasStyle = {
+      width: this.cols * 20,
+      height: this.rows * 20,
     }
 
     return (
-      <div ref={this.container} style={containerStyle}>
-        <GestureListener onClick={this.handleClick}>
-          <canvas ref={this.canvas} style={canvasStyle} onMouseEnter={this.handleHoverIn} onMouseLeave={this.handleHoverOut}/>
-        </GestureListener>
+      <div
+        ref={this.container}
+        style={containerStyle}
+        onClick={this.handleClick}
+        onMouseEnter={this.handleHoverIn}
+        onMouseLeave={this.handleHoverOut}
+      >
+        <canvas
+          ref={this.canvas}
+          style={canvasStyle}
+        />
       </div>
     )
   }

@@ -261,6 +261,7 @@ export default class Game extends React.PureComponent {
   render() {
     const containerStyle = {
       display: 'flex',
+      alignItems: 'flex-start',
     }
 
     return (

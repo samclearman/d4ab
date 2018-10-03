@@ -24,13 +24,15 @@ class App extends Component {
       width: '100vw',
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'center',
+      justifyContent: 'space-around',
     };
 
     return (
       <div className="App" style={appStyle}>
-        {this.renderTitle()}
-        <Game/>
+        <div>
+          {this.renderTitle()}
+          <Game/>
+        </div>
       </div>
     );
   }
