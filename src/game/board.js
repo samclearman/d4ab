@@ -36,6 +36,7 @@ const sharesEdgeWith = (cells, positions, player) => {
     for (const [di, dj] of [[1,0],[-1,0],[0,1],[0,-1]]) {
       const i = ci + di;
       const j = cj + dj;
+      if (i < 0 || j < 0 || i >= HEIGHT || j >= WIDTH) continue
       if (cells[(i * WIDTH) + j] && cells[(i * WIDTH) + j].val === player) {
         return true;
       }
@@ -53,6 +54,7 @@ const sharesVertexWith = (cells, positions, player) => {
     for (const [di, dj] of [[1,1],[-1,1],[1,-1],[-1,-1]]) {
       const i = ci + di;
       const j = cj + dj;
+      if (i < 0 || j < 0 || i >= HEIGHT || j >= WIDTH) continue
       if (cells[(i * WIDTH) + j] && cells[(i * WIDTH) + j].val === player) {
         return true;
       }
