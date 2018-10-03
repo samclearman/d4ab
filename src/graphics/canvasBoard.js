@@ -79,28 +79,58 @@ export default class CanvasBoard extends EventEmitter {
     if (currentColor !== undefined) this.currentColor = currentColor
   }
 
+  getCellFor({ x, y }) {
+    const cellSize = this.cellSize
+    const rect = this.canvas.getBoundingClientRect()
+    return {
+      i: Math.floor((y - rect.top) / cellSize),
+      j: Math.floor((x - rect.left) / cellSize),
+    }
+  }
+
   handleMouseExit = (e) => {
     this.emit('hovercell', null)
   }
 
+  handleTouchStart = (e) => {
+    if (e.touches.length !== 1) return
+    e.preventDefault()
+    const touch = e.touches.item(0)
+    const { i, j } = this.getCellFor({
+      x: touch.clientX,
+      y: touch.clientY,
+    })
+    this.emit('touchstartcell', { i, j })
+  }
+
+  handleTouchMove = (e) => {
+    if (e.touches.length !== 1) return
+    e.preventDefault()
+    const touch = e.touches.item(0)
+    const { i, j } = this.getCellFor({
+      x: touch.clientX,
+      y: touch.clientY,
+    })
+    this.emit('touchmovecell', { i, j })
+  }
+
+  handleTouchEnd = (e) => {
+    this.emit('touchend')
+  }
+
   handleClick = (e) => {
-    const cellSize = this.cellSize
-    const rect = this.canvas.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
-    const i = Math.floor(y / cellSize)
-    const j = Math.floor(x / cellSize)
+    const { i, j } = this.getCellFor({
+      x: e.clientX,
+      y: e.clientY,
+    })
     this.emit('clickcell', { i, j })
   }
 
   handleMouseMove = (e) => {
-    const cellSize = this.cellSize
-    const rect = this.canvas.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
-    const i = Math.floor(y / cellSize)
-    const j = Math.floor(x / cellSize)
-
+    const { i, j } = this.getCellFor({
+      x: e.clientX,
+      y: e.clientY,
+    })
     this.emit('hovercell', { i, j })
   }
 
@@ -109,6 +139,9 @@ export default class CanvasBoard extends EventEmitter {
     this.canvas = canvas
     this.canvas.addEventListener('mousemove', this.handleMouseMove)
     this.canvas.addEventListener('click', this.handleClick)
+    this.canvas.addEventListener('touchstart', this.handleTouchStart)
+    this.canvas.addEventListener('touchmove', this.handleTouchMove)
+    this.canvas.addEventListener('touchend', this.handleTouchEnd)
   }
 
   resize() {

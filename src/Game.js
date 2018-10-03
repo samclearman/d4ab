@@ -60,6 +60,9 @@ export default class Game extends React.PureComponent {
     this.componentDidUpdate()
     this.canvasBoard.on('hovercell', this.handleHoverCell)
     this.canvasBoard.on('clickcell', this.handleClickCell)
+    this.canvasBoard.on('touchstartcell', this.handleTouchStartCell)
+    this.canvasBoard.on('touchmovecell', this.handleTouchMoveCell)
+    this.canvasBoard.on('touchend', this.handleTouchEnd)
     window.addEventListener('keydown', this.handleKeyDown)
   }
 
@@ -70,6 +73,9 @@ export default class Game extends React.PureComponent {
   componentWillUnmount() {
     this.canvasBoard.off('hovercell', this.handleHoverCell)
     this.canvasBoard.off('clickcell', this.handleClickCell)
+    this.canvasBoard.off('touchstartcell', this.handleTouchStartCell)
+    this.canvasBoard.off('touchmovecell', this.handleTouchMoveCell)
+    this.canvasBoard.off('touchend', this.handleTouchEnd)
     window.removeEventListener('keydown', this.handleKeyDown)
   }
 
@@ -119,9 +125,11 @@ export default class Game extends React.PureComponent {
     })
   }
 
-  handleTouchUpCell = (cell) => {
+  handleTouchStartCell = (cell) => {
     this.setState({
-      staged: true,
+      staged: false,
+    }, () => {
+      this.handleHoverCell(cell)
     })
   }
 
@@ -131,12 +139,12 @@ export default class Game extends React.PureComponent {
     })
   }
 
-  handleTouchDownCell = (cell) => {
-    this.setState({
-      staged: false,
-    }, () => {
-      this.handleHoverCell(cell)
-    })
+  handleTouchEnd = (cell) => {
+    if (this.currentPieceIsValid) {
+      this.setState({
+        staged: true,
+      })
+    }
   }
 
   handleClickCell = (cell) => {
