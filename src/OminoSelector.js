@@ -111,7 +111,6 @@ class OminoCanvas extends React.PureComponent {
 
 export default class OminoSelector extends React.PureComponent {
   componentDidMount = () => {
-    this.props.onSelectOmino(this.props.ominos[this.props.ominos.length - 1])
   }
 
   handleSelect = ominoIdx => {

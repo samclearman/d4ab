@@ -25,23 +25,6 @@ export default class Game extends React.PureComponent {
     this.canvasBoard = new CanvasBoard({
       theme: this.state.theme,
     })
-    this.state.board = reducers.place(
-      this.state.board,
-      1,
-      ominos()[5],
-      { rotations: 1, flips: 1 },
-      2,
-      3
-    );
-    this.state.board = reducers.place(
-      this.state.board,
-      2,
-      ominos()[5],
-      { rotations: 1, flips: 0 },
-      8,
-      3
-    );
-
     this.handleKeyPress = this.handleKeyPress.bind(this);
   }
 
