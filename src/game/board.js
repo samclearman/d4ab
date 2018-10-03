@@ -24,9 +24,7 @@ const inBounds = (cells, positions) => {
 const vacant = (cells, positions) => {
   for (const {i, j} of positions) {
     if (i < 0 || i >= HEIGHT || j < 0 || j >= WIDTH) return false
-    console.log(cells, i, j)
     if (cells[(i * WIDTH) + j].val !== 0) {
-      console.log(i, j, cells)
       return false;
     }
   }
@@ -34,11 +32,33 @@ const vacant = (cells, positions) => {
 };
 
 const sharesEdgeWith = (cells, positions, player) => {
+  for (const {i:ci, j:cj} of positions) {
+    for (const [di, dj] of [[1,0],[-1,0],[0,1],[0,-1]]) {
+      const i = ci + di;
+      const j = cj + dj;
+      if (cells[(i * WIDTH) + j] && cells[(i * WIDTH) + j].val === player) {
+        return true;
+      }
+    }
+  }
   return false;
-}
+};
 
 const sharesVertexWith = (cells, positions, player) => {
-  return true;
+  for (const {i:ci, j:cj} of positions) {
+    // Kinda hacky way to handle initial moves
+    if ([0, WIDTH - 1].includes(ci) && [0, HEIGHT-1].includes(cj)) {
+      return true;
+    }
+    for (const [di, dj] of [[1,1],[-1,1],[1,-1],[-1,-1]]) {
+      const i = ci + di;
+      const j = cj + dj;
+      if (cells[(i * WIDTH) + j] && cells[(i * WIDTH) + j].val === player) {
+        return true;
+      }
+    }
+  }
+  return false;
 }
 
 export const validatePlace = (b, player, omino, transformation, x, y) => {
@@ -63,16 +83,10 @@ export const validatePlace = (b, player, omino, transformation, x, y) => {
   if (sharesEdgeWith(b.cells, positions, player)) {
     return false
   }
-    /*
-  if (b.moveCounts[player] === 0) {
-    // handle first-move logic
-    if (positions contains(b.firstMoves[player]) {
-    }
-  } else {
+   
     if (!sharesVertexWith(b.cells, positions, player)) {
-      return error(b);
+      return false
     }
-  } */
   return true
 }
 
