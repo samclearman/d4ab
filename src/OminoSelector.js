@@ -118,7 +118,7 @@ export default class OminoSelector extends React.PureComponent {
   render() {
     const containerStyle = {
       display: 'grid',
-      'grid-template-columns': 'auto auto auto',
+      gridTemplateColumns: 'auto auto auto',
     }
     return (
       <div style={containerStyle}>

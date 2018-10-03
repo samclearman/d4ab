@@ -39,6 +39,8 @@ export default class Game extends React.PureComponent {
       8,
       3
     );
+
+    this.handleKeyPress = this.handleKeyPress.bind(this);
   }
 
   componentDidMount() {
@@ -46,6 +48,7 @@ export default class Game extends React.PureComponent {
     this.componentDidUpdate()
     this.canvasBoard.on('hovercell', this.handleHoverCell)
     this.canvasBoard.on('clickcell', this.handleClickCell)
+    window.addEventListener('keypress', this.handleKeyPress)
   }
 
   componentDidUpdate() {
@@ -55,6 +58,7 @@ export default class Game extends React.PureComponent {
   componentWillUnmount() {
     this.canvasBoard.off('hovercell', this.handleHoverCell)
     this.canvasBoard.off('clickcell', this.handleClickCell)
+    window.removeEventListener('keypress', this.handleKeyPress)
   }
 
   get playerIndex() {
@@ -131,6 +135,12 @@ export default class Game extends React.PureComponent {
     }
   }
 
+  handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      this.handleConfirm()
+    }
+  }
+
   handleSelectOmino = (selectedOmino) => {
     this.setState({
       selectedOmino,
@@ -165,8 +175,12 @@ export default class Game extends React.PureComponent {
       position: 'relative',
     }
     return (
-      <div ref={this.container} style={containerStyle}>
-        <canvas ref={this.canvas} style={canvasStyle}/>
+      <div>
+        <div ref={this.container} style={containerStyle}>
+          <canvas ref={this.canvas} style={canvasStyle}/>
+        </div>
+
+        {this.renderConfirmButton()}
       </div>
     )
   }
@@ -180,7 +194,7 @@ export default class Game extends React.PureComponent {
         style={buttonStyle}
         onClick={this.handleConfirm}
       >
-        Confirm
+        Confirm (Enter ↵)
       </button>
     )
   }
@@ -207,7 +221,6 @@ export default class Game extends React.PureComponent {
         {this.renderCanvasBoard()}
         <div style={{ width: '60px' }} />
         {this.renderOminoSelector()}
-        {this.renderConfirmButton()}
       </div>
     )
   }
