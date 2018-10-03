@@ -110,7 +110,7 @@ export const hasValidMove = (b, player) => {
 
 export const getNextPlayer = (b, player) => {
   for (const i of _.range(b.settings.players - 1)) {
-    const nextPlayer = (player + i) % b.settings.players
+    const nextPlayer = (player + i + 1) % b.settings.players
     if (hasValidMove(b, nextPlayer)) {
       return nextPlayer
     }
