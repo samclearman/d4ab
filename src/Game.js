@@ -227,7 +227,9 @@ export default class Game extends React.PureComponent {
     return (
       <div style={containerStyle}>
         {this.renderCanvasBoard()}
+
         <div style={{ width: '60px' }} />
+
         {this.renderOminoSelector()}
       </div>
     )
