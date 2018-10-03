@@ -154,9 +154,11 @@ export default class Game extends React.PureComponent {
       this.handleTransformation(e.key)
     } else if (e.key === 'Tab') {
       this.handleToggleSpace()
-      e.preventDefault()
-      e.stopPropagation()
+    } else {
+      return
     }
+    e.preventDefault()
+    e.stopPropagation()
   }
 
   handleTransformation = (transformation) => {
