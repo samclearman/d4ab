@@ -16,7 +16,7 @@ export const DEFAULT_THEME = {
 }
 
 export const ANGELA_THEME = {
-  gridBackground: '#fcfcfc',
+  gridBackground: '#fafafa',
   gridLine: 'white',
   colors: [
     'white',

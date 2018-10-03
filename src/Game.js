@@ -188,10 +188,12 @@ export default class Game extends React.PureComponent {
   renderOminoSelector() {
     return (
       <OminoSelector
+        key={this.playerIndex}
         ominos={this.state.board.ominosRemaining[this.playerIndex]}
         selectedOmino={this.state.selectedOmino}
         currentColor={this.currentColor}
-        onSelectOmino={this.handleSelectOmino} />
+        onSelectOmino={this.handleSelectOmino}
+      />
     )
   }
 
