@@ -155,18 +155,14 @@ export default class CanvasBoard extends EventEmitter {
     const y = i * cellSize
     if (ghost) {
       if (staged) {
-        ctx.fillStyle = getHexStr8(color, 1.0)
-        ctx.fillRect(x, y, cellSize, cellSize)
-        ctx.fillStyle = getHexStr8('white', 0.3)
+        ctx.fillStyle = getHexStr8(color, 0.5)
         ctx.fillRect(x, y, cellSize, cellSize)
       } else {
         if (valid) {
-          ctx.fillStyle = getHexStr8(color, 0.6)
-          ctx.fillRect(x, y, cellSize, cellSize)
-          ctx.fillStyle = getHexStr8('#cccccc', 0.6)
+          ctx.fillStyle = getHexStr8(color, 0.2)
           ctx.fillRect(x, y, cellSize, cellSize)
         } else {
-          ctx.fillStyle = getHexStr8('#cccccc', 0.6)
+          ctx.fillStyle = getHexStr8('black', 0.05)
           ctx.fillRect(x, y, cellSize, cellSize)
         }
       }
@@ -199,6 +195,7 @@ export default class CanvasBoard extends EventEmitter {
     if (!omino || !cell) return
     const currentColor = this.currentColor
     const { i: di, j: dj } = cell
+
     omino.forEach((row, i) => {
       row.forEach((val, j) => {
         if (!val) return

@@ -5,15 +5,22 @@ import { RANDOM_BOARD, reducers, validatePlace } from './game/board'
 import { ominos } from './game/ominos'
 import OminoSelector from './OminoSelector'
 
+const SPACES = {
+  BOARD: 'board',
+  OMINO_SELECTOR: 'omino_selector',
+}
+
 export default class Game extends React.PureComponent {
   constructor() {
     super()
     this.container = React.createRef()
     this.canvas = React.createRef()
+
     this.state = {
       board: RANDOM_BOARD,
       cell: null,
       selectedOminoIdx: null,
+      selectedSpace: SPACES.BOARD,
       pieces: [],
       currentTransformation: {
         rotations: 0,
@@ -22,10 +29,30 @@ export default class Game extends React.PureComponent {
       staged: false,
       theme: ANGELA_THEME,
     }
+
     this.canvasBoard = new CanvasBoard({
       theme: this.state.theme,
     })
-    this.handleKeyPress = this.handleKeyPress.bind(this);
+
+    this.state.board = reducers.place(
+      this.state.board,
+      1,
+      ominos()[5],
+      { rotations: 1, flips: 1 },
+      2,
+      3
+    );
+
+    this.state.board = reducers.place(
+      this.state.board,
+      2,
+      ominos()[5],
+      { rotations: 1, flips: 0 },
+      8,
+      3
+    );
+
+    this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
   componentDidMount() {
@@ -33,7 +60,7 @@ export default class Game extends React.PureComponent {
     this.componentDidUpdate()
     this.canvasBoard.on('hovercell', this.handleHoverCell)
     this.canvasBoard.on('clickcell', this.handleClickCell)
-    window.addEventListener('keypress', this.handleKeyPress)
+    window.addEventListener('keydown', this.handleKeyDown)
   }
 
   componentDidUpdate() {
@@ -43,7 +70,7 @@ export default class Game extends React.PureComponent {
   componentWillUnmount() {
     this.canvasBoard.off('hovercell', this.handleHoverCell)
     this.canvasBoard.off('clickcell', this.handleClickCell)
-    window.removeEventListener('keypress', this.handleKeyPress)
+    window.removeEventListener('keydown', this.handleKeyDown)
   }
 
   get playerIndex() {
@@ -128,9 +155,15 @@ export default class Game extends React.PureComponent {
     }
   }
 
-  handleKeyPress = (e) => {
+  handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       this.handleConfirm()
+    }
+
+    if (e.key === 'Tab') {
+      this.handleToggleSpace()
+      e.preventDefault();
+      e.stopPropagation();
     }
   }
 
@@ -139,6 +172,12 @@ export default class Game extends React.PureComponent {
       selectedOminoIdx,
       cell: null,
       staged: false,
+    })
+  }
+
+  handleToggleSpace = () => {
+    this.setState({
+      selectedSpace: this.state.selectedSpace === SPACES.BOARD ? SPACES.OMINO_SELECTOR : SPACES.BOARD,
     })
   }
 
