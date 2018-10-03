@@ -103,11 +103,6 @@ export const ominos = () => {
   );
 };
 
-// The number of squares in the omino
-const size = (omino) => {
-  return omino.map(r => r.reduce((x, y) => x + y)).reduce((x, y) => x + y);
-}
-
 const rotated = (paddedOmino) => {
   const N = paddedOmino.length;
   const rotated = [];

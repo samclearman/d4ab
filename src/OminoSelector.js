@@ -2,7 +2,6 @@ import React from 'react'
 import _ from 'lodash'
 import CanvasBoard, { makeTheme } from './graphics/canvasBoard'
 import GestureListener from './GestureListener'
-import { reducers } from './game/board'
 import { ominos, unpadded } from './game/ominos'
 
 class OminoCanvas extends React.PureComponent {
