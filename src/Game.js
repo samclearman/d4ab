@@ -14,7 +14,7 @@ export default class Game extends React.PureComponent {
     this.state = {
       board: RANDOM_BOARD,
       cell: null,
-      selectedOmino: null,
+      selectedOminoIdx: null,
       pieces: [],
       currentTransformation: {
         rotations: 0,
@@ -23,22 +23,6 @@ export default class Game extends React.PureComponent {
       staged: false,
       theme: ANGELA_THEME,
     }
-    this.state.board = reducers.place(
-      this.state.board,
-      1,
-      ominos()[5],
-      { rotations: 1, flips: 1 },
-      2,
-      3
-    );
-    this.state.board = reducers.place(
-      this.state.board,
-      2,
-      ominos()[5],
-      { rotations: 1, flips: 0 },
-      8,
-      3
-    );
   }
 
   componentDidMount() {
@@ -66,17 +50,17 @@ export default class Game extends React.PureComponent {
   }
 
   updateCanvasBoard() {
-    const { board, cell, selectedOmino, currentTransformation, staged } = this.state
+    const { board, cell, selectedOminoIdx, currentTransformation, staged } = this.state
     const cells = board.cells
     const dimensions = {
       rows: board.settings.rows,
       cols: board.settings.cols,
     }
     const currentColor = this.currentColor
-    const ghost = (cell && selectedOmino) ? {
-      omino: selectedOmino,
+    const ghost = (cell && selectedOminoIdx) ? {
+      omino: ominos()[selectedOminoIdx],
       transformation: currentTransformation,
-      valid: validatePlace(board, this.playerIndex, selectedOmino, currentTransformation, cell.i, cell.j),
+      valid: validatePlace(board, this.playerIndex, selectedOminoIdx, currentTransformation, cell.i, cell.j),
       staged,
       cell,
     } : null
@@ -131,9 +115,9 @@ export default class Game extends React.PureComponent {
     }
   }
 
-  handleSelectOmino = (selectedOmino) => {
+  handleSelectOmino = (selectedOminoIdx) => {
     this.setState({
-      selectedOmino,
+      selectedOminoIdx,
       cell: null,
       staged: false,
     })
@@ -141,12 +125,12 @@ export default class Game extends React.PureComponent {
 
   handleConfirm = () => {
     const cell = this.state.cell
-    const { board, selectedOmino, currentTransformation } = this.state
-    if (!selectedOmino) { return }
-    if (!validatePlace(board, this.playerIndex, selectedOmino, currentTransformation, cell.i, cell.j)) { return }
+    const { board, selectedOminoIdx, currentTransformation } = this.state
+    if (selectedOminoIdx === null) { return }
+    if (!validatePlace(board, this.playerIndex, selectedOminoIdx, currentTransformation, cell.i, cell.j)) { return }
     this.setState({
-      board: reducers.place(board, this.playerIndex, selectedOmino, currentTransformation, cell.i, cell.j),
-      selectedOmino: null,
+      board: reducers.place(board, this.playerIndex, selectedOminoIdx, currentTransformation, cell.i, cell.j),
+      selectedOminoIdx: null,
     })
   }
 
@@ -188,8 +172,8 @@ export default class Game extends React.PureComponent {
   renderOminoSelector() {
     return (
       <OminoSelector
-        ominos={this.state.board.ominosRemaining[this.playerIndex]}
-        selectedOmino={this.state.selectedOmino}
+        ominosRemaining={this.state.board.ominosRemaining[this.playerIndex]}
+        selectedOminoIdx={this.state.selectedOminoIdx}
         currentColor={this.currentColor}
         onSelectOmino={this.handleSelectOmino} />
     )
