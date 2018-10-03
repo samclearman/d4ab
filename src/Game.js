@@ -69,6 +69,11 @@ export default class Game extends React.PureComponent {
     return this.state.theme.colors[this.playerIndex]
   }
 
+  get currentPieceIsValid() {
+    const { board, cell, selectedOmino, currentTransformation, staged } = this.state
+    return validatePlace(board, this.playerIndex, selectedOmino, currentTransformation, cell.i, cell.j)
+  }
+
   updateCanvasBoard() {
     const { board, cell, selectedOmino, currentTransformation, staged } = this.state
     const cells = board.cells
@@ -80,7 +85,7 @@ export default class Game extends React.PureComponent {
     const ghost = (cell && selectedOmino) ? {
       omino: selectedOmino,
       transformation: currentTransformation,
-      valid: validatePlace(board, this.playerIndex, selectedOmino, currentTransformation, cell.i, cell.j),
+      valid: this.currentPieceIsValid,
       staged,
       cell,
     } : null
@@ -129,9 +134,11 @@ export default class Game extends React.PureComponent {
         this.handleHoverCell(cell)
       })
     } else {
-      this.setState({
-        staged: true,
-      })
+      if (this.currentPieceIsValid) {
+        this.setState({
+          staged: true,
+        })
+      }
     }
   }
 
@@ -153,7 +160,7 @@ export default class Game extends React.PureComponent {
     const cell = this.state.cell
     const { board, selectedOmino, currentTransformation } = this.state
     if (!selectedOmino) { return }
-    if (!validatePlace(board, this.playerIndex, selectedOmino, currentTransformation, cell.i, cell.j)) { return }
+    if (!this.currentPieceIsValid) { return }
     this.setState({
       board: reducers.place(board, this.playerIndex, selectedOmino, currentTransformation, cell.i, cell.j),
       selectedOmino: null,
