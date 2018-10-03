@@ -154,14 +154,14 @@ export const reducers = {
   },
 
   place(b, player, ominoIdx, transformation, x, y) {
-    console.log('placing');
+    console.log('placing')
     const omino = getOmino(ominoIdx)
     if (!validatePlace(b, player, ominoIdx, transformation, x, y)) {
-      return error(b);
+      return error(b)
     }
-    const ominosRemaining = { ...b.ominosRemaining[player] };
-    if (!(ominosRemaining[ominoIdx])) {
-      return error(b);
+    const { ominosRemaining } = b
+    if (!(ominosRemaining[player][ominoIdx])) {
+      return error(b)
     }
     const t = transformed(omino, transformation)
     const positions = []
@@ -178,12 +178,17 @@ export const reducers = {
       const cell = cells[(i * WIDTH) + j]
       cell.val = player
     }
-    ominosRemaining[ominoIdx] = false;
     return {
       ...b,
       nextPlayer,
       cells,
-      ominosRemaining,
+      ominosRemaining: {
+        ...ominosRemaining,
+        [player]: {
+          ...ominosRemaining[player],
+          [ominoIdx]: false,
+        },
+      },
     }
   },
 }

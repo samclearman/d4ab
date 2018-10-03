@@ -125,6 +125,7 @@ export default class OminoSelector extends React.PureComponent {
       gridTemplateColumns: 'auto auto auto',
     }
 
+    console.log('REMAINING:', this.props.ominosRemaining)
     return (
       <div style={containerStyle}>
         {_.keys(this.props.ominosRemaining).map((ominoIdx, i) => ( this.props.ominosRemaining[ominoIdx] &&
