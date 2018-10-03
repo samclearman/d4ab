@@ -13,7 +13,8 @@ firebase.initializeApp({
 // Initialize Cloud Firestore through Firebase
 const db = firebase.firestore();
 
-const GAME_ID = 'yuIG6DNpPXV8C3tmOHMf';
+// const GAME_ID = 'yuIG6DNpPXV8C3tmOHMf';
+const GAME_ID = null;
 
 const handlers = {
   place: (gameState, event) => {
