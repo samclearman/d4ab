@@ -1,6 +1,6 @@
 {
   "root": "build/",
   "routes": {
-    "/*.html": "index.html"
+    "/game/*": "index.html"
   }
 }
