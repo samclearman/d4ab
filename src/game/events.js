@@ -62,9 +62,7 @@ export const eventList = (getState, setState, { gameId }) => {
 
 }
 export const createGame = (callback) => {
-  console.log('create game called');
   db.collection('games').add({events: []}).then(ref => {
-    console.log(ref.id)
     callback(ref.id)
   })
 }
