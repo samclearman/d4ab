@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import { Route, Switch } from 'react-router-dom';
 import './App.css';
 import Game from './Game'
+import CreateGame from './CreateGame'
 
 class App extends Component {
   renderTitle() {
@@ -28,12 +30,18 @@ class App extends Component {
     };
 
     return (
-      <div className="App" style={appStyle}>
-        <div>
-          {this.renderTitle()}
-          <Game/>
-        </div>
-      </div>
+      <Switch>
+        <Route exact path='/' component={CreateGame} />
+        <Route path='/game/:id' render={({ match }) => (
+          <div className="App" style={appStyle}>
+            <div>
+              {this.renderTitle()}
+              <Game gameId={match.params.id}/>
+            </div>
+          </div>
+        )}
+        />
+        </Switch>
     );
   }
 }

@@ -12,7 +12,7 @@ const SPACES = {
 }
 
 export default class Game extends React.PureComponent {
-  constructor() {
+  constructor(props) {
     super()
     this.container = React.createRef()
     this.canvas = React.createRef()
@@ -38,6 +38,7 @@ export default class Game extends React.PureComponent {
     this.eventList = eventList(
       () => (this.state),
       (newState) => {this.setState(newState)},
+      { gameId: props.gameId },
     )
 
     this.handleKeyDown = this.handleKeyDown.bind(this);

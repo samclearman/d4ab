@@ -13,9 +13,6 @@ firebase.initializeApp({
 // Initialize Cloud Firestore through Firebase
 const db = firebase.firestore();
 
-// const GAME_ID = 'yuIG6DNpPXV8C3tmOHMf';
-const GAME_ID = null;
-
 const handlers = {
   place: (gameState, event) => {
     const board = gameState.board;
@@ -25,7 +22,7 @@ const handlers = {
 }
 
 
-export const eventList = (getState, setState) => {
+export const eventList = (getState, setState, { gameId }) => {
 
   const processedEvents = [];
   let doc;
@@ -38,8 +35,8 @@ export const eventList = (getState, setState) => {
       }
     }
   
-  if (GAME_ID) {
-    doc = db.collection('games').doc(GAME_ID)
+  if (gameId) {
+    doc = db.collection('games').doc(gameId)
     doc.onSnapshot(snapshotHandler);
   } else {
     db.collection('games').add({events: []}).then(ref => {
@@ -63,4 +60,11 @@ export const eventList = (getState, setState) => {
     }
   }
 
+}
+export const createGame = (callback) => {
+  console.log('create game called');
+  db.collection('games').add({events: []}).then(ref => {
+    console.log(ref.id)
+    callback(ref.id)
+  })
 }
