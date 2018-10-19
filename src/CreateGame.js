@@ -6,7 +6,6 @@ export default class CreateGame extends React.PureComponent {
   constructor() {
     super();
     this.state = {}
-    console.log('creating game..')
     createGame(newGameId => this.setState({ newGameId }));
   }
 
@@ -18,7 +17,6 @@ export default class CreateGame extends React.PureComponent {
         </div>
       )
     }
-    console.log(`redirecting to ${this.state.newGameId}`);
     return (
       <Redirect
           to={{

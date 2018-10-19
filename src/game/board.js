@@ -217,7 +217,7 @@ export const reducers = {
 }
 
 
-export const RANDOM_BOARD = (
+export const NEW_BOARD = (
   // reducers.randomize(
     reducers.initialize({}, 20, 20)
   // )

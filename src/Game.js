@@ -1,7 +1,7 @@
 import React from 'react'
 import _ from 'lodash'
 import CanvasBoard, { ANGELA_THEME } from './graphics/canvasBoard'
-import { RANDOM_BOARD, reducers, validatePlace } from './game/board'
+import { NEW_BOARD, reducers, validatePlace } from './game/board'
 import { getOmino } from './game/ominos'
 import OminoSelector from './OminoSelector'
 import { eventList } from './game/events'
@@ -18,7 +18,7 @@ export default class Game extends React.PureComponent {
     this.canvas = React.createRef()
 
     this.state = {
-      board: RANDOM_BOARD,
+      board: NEW_BOARD,
       cell: null,
       selectedOminoIdx: null,
       selectedSpace: SPACES.BOARD,
@@ -29,6 +29,7 @@ export default class Game extends React.PureComponent {
       },
       staged: false,
       theme: ANGELA_THEME,
+      playerId: 0,
     }
 
     this.canvasBoard = new CanvasBoard({
@@ -71,6 +72,13 @@ export default class Game extends React.PureComponent {
 
   get playerIndex() {
     return this.state.board.nextPlayer
+  }
+
+  get myColor() {
+    if (!this.state.playerId) {
+      return 'black'
+    }
+    return this.state.theme.colors[this.state.playerId]
   }
 
   get currentColor() {
@@ -221,6 +229,22 @@ export default class Game extends React.PureComponent {
     })
   }
 
+  renderTitle() {
+    const titleStyle = {
+      color: this.myColor,
+      fontSize: '20px',
+      fontWeight: 'bold',
+      textTransform: 'uppercase',
+      letterSpacing: '3px',
+    }
+
+    return (
+      <div style={titleStyle}>
+        Down for a block
+      </div>
+    );
+  }
+  
   renderCanvasBoard() {
     const canvasStyle = {
       position: 'absolute',
@@ -286,13 +310,18 @@ export default class Game extends React.PureComponent {
     }
 
     return (
-      <div style={containerStyle}>
-        {this.renderCanvasBoard()}
+      <div>
+        {this.renderTitle()}
+      
+        <div style={containerStyle}>
+          {this.renderCanvasBoard()}
 
-        <div style={{ width: '60px' }} />
+          <div style={{ width: '60px' }} />
 
-        {this.renderOminoSelector()}
+          {this.renderOminoSelector()}
+        </div>
       </div>
+        
     )
   }
 }
