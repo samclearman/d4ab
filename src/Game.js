@@ -1,6 +1,6 @@
 import React from 'react'
 import _ from 'lodash'
-import CanvasBoard, { ANGELA_THEME } from './graphics/canvasBoard'
+import CanvasBoard, { ANGELA_THEME, GAME_OVER_THEME } from './graphics/canvasBoard'
 import { NEW_BOARD, reducers, validatePlace } from './game/board'
 import { getOmino } from './game/ominos'
 import OminoSelector from './OminoSelector'
@@ -57,6 +57,9 @@ export default class Game extends React.PureComponent {
   }
 
   componentDidUpdate() {
+    if (this.state.board.gameOver) {
+      this.canvasBoard.set({theme: GAME_OVER_THEME})
+    }
     this.updateCanvasBoard()
   }
 

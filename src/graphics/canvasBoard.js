@@ -28,6 +28,17 @@ export const ANGELA_THEME = {
   ],
 }
 
+export const GAME_OVER_THEME = {
+  gridBackground: 'white',
+  colors: [
+    'white',
+    '#E1B16A',
+    '#78A5A3',
+    '#CE5A57',
+    '#444C5C',
+  ],
+}
+
 export const makeTheme = (color) => ({
   gridBackground: 'white',
   gridLine: 'white',
@@ -163,6 +174,9 @@ export default class CanvasBoard extends EventEmitter {
   }
 
   renderGridLines() {
+    if (!this.theme.gridLine) {
+      return
+    }
     const canvas = this.canvas
     const ctx = canvas.getContext('2d')
     const cellSize = this.cellSize
