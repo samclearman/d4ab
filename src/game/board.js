@@ -181,6 +181,9 @@ export const reducers = {
   },
 
   place(b, player, ominoIdx, transformation, x, y) {
+    if (player !== b.nextPlayer) {
+      return b
+    }
     const omino = getOmino(ominoIdx)
     if (!validatePlace(b, player, ominoIdx, transformation, x, y)) {
       return error(b)
@@ -218,7 +221,5 @@ export const reducers = {
 
 
 export const NEW_BOARD = (
-  // reducers.randomize(
-    reducers.initialize({}, 20, 20)
-  // )
+  reducers.initialize({}, 20, 20)
 )

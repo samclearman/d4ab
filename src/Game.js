@@ -74,14 +74,7 @@ export default class Game extends React.PureComponent {
   }
 
   get playerIndex() {
-    return this.state.board.nextPlayer
-  }
-
-  get myColor() {
-    if (!this.state.playerId) {
-      return 'black'
-    }
-    return this.state.theme.colors[this.state.playerId]
+    return this.state.playerId || this.state.board.nextPlayer
   }
 
   get currentColor() {
@@ -105,7 +98,6 @@ export default class Game extends React.PureComponent {
       rows: board.settings.rows,
       cols: board.settings.cols,
     }
-    const currentColor = this.currentColor
     const ghost = (cell && selectedOminoIdx) ? {
       omino: getOmino(selectedOminoIdx),
       transformation: currentTransformation,
@@ -116,7 +108,7 @@ export default class Game extends React.PureComponent {
     this.canvasBoard.set({
       dimensions,
       cells,
-      currentColor,
+      currentColor: this.currentColor,
       ghost,
     })
     this.canvasBoard.render()
@@ -234,7 +226,7 @@ export default class Game extends React.PureComponent {
 
   renderTitle() {
     const titleStyle = {
-      color: this.myColor,
+      color: this.currentColor,
       fontSize: '20px',
       fontWeight: 'bold',
       textTransform: 'uppercase',
@@ -295,12 +287,14 @@ export default class Game extends React.PureComponent {
   }
 
   renderOminoSelector() {
+    const player = this.playerIndex;
+    const color = this.currentColor;
     return (
       <OminoSelector
-        key={this.playerIndex}
-        ominosRemaining={this.state.board.ominosRemaining[this.playerIndex]}
+        key={player}
+        ominosRemaining={this.state.board.ominosRemaining[player]}
         selectedOminoIdx={this.state.selectedOminoIdx}
-        currentColor={this.currentColor}
+        currentColor={color}
         onSelectOmino={this.handleSelectOmino}
       />
     )
