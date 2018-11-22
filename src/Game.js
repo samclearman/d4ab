@@ -30,6 +30,7 @@ export default class Game extends React.PureComponent {
       staged: false,
       theme: ANGELA_THEME,
       playerId: 0,
+      selectorPlayer: 1
     }
 
     this.canvasBoard = new CanvasBoard({
@@ -74,11 +75,15 @@ export default class Game extends React.PureComponent {
   }
 
   get playerIndex() {
-    return this.state.playerId || this.state.board.nextPlayer
+    return this.state.playerId;
   }
 
-  get currentColor() {
+  get playerColor() {
     return this.state.theme.colors[this.playerIndex]
+  }
+
+  get selectorColor() {
+    return this.state.theme.colors[this.state.selectorPlayer]
   }
 
   get currentPieceIsValid() {
@@ -108,7 +113,7 @@ export default class Game extends React.PureComponent {
     this.canvasBoard.set({
       dimensions,
       cells,
-      currentColor: this.currentColor,
+      currentColor: this.playerColor,
       ghost,
     })
     this.canvasBoard.render()
@@ -226,7 +231,7 @@ export default class Game extends React.PureComponent {
 
   renderTitle() {
     const titleStyle = {
-      color: this.currentColor,
+      color: this.playerColor,
       fontSize: '20px',
       fontWeight: 'bold',
       textTransform: 'uppercase',
@@ -286,16 +291,45 @@ export default class Game extends React.PureComponent {
     )
   }
 
+  selectSelector(playerIndex) {
+    this.setState({selectorPlayer: playerIndex})
+  }
+    
+  renderOminoSelectorSelectorSelector(playerIndex) {
+    const handler = () => {
+      this.selectSelector(playerIndex);
+    }
+    const button = playerIndex === this.state.selectorPlayer ? '■' : '□'
+    const style = {
+      color: this.state.theme.colors[playerIndex],
+      cursor: 'pointer',
+      display: 'inline-block',
+      fontSize: '20px',
+    }
+    return(
+        <div style={style} onClick={handler}>{ button }</div>
+    )
+  }
+  
+  renderOminoSelectorSelector() {
+    const selectorSelectorSelectors = [1,2,3,4].map(i => this.renderOminoSelectorSelectorSelector(i))
+    return ( <div>{ selectorSelectorSelectors }</div> )
+  }
+  
   renderOminoSelector() {
-    const player = this.playerIndex;
-    const color = this.currentColor;
+    const active = this.state.selectorPlayer === this.state.playerId
+    const player = this.state.selectorPlayer
+    const selector = active ? this.handleSelectOmino : () => {}
+    const selectedIdx = active ? this.state.selectedOminoIdx : 0;
+    const color = this.selectorColor
     return (
       <OminoSelector
-        key={player}
+        active={active}
+        key={(10 * active) + player}
         ominosRemaining={this.state.board.ominosRemaining[player]}
-        selectedOminoIdx={this.state.selectedOminoIdx}
+        selectedOminoIdx={selectedIdx}
         currentColor={color}
-        onSelectOmino={this.handleSelectOmino}
+        onSelectOmino={selector}
       />
     )
   }
@@ -313,9 +347,11 @@ export default class Game extends React.PureComponent {
         <div style={containerStyle}>
           {this.renderCanvasBoard()}
 
-          <div style={{ width: '60px' }} />
-
-          {this.renderOminoSelector()}
+        <div style={{ width: '60px' }} />
+          <div>
+            {this.renderOminoSelectorSelector()}
+            {this.renderOminoSelector()}
+          </div>
         </div>
       </div>
         

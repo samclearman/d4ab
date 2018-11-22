@@ -65,6 +65,10 @@ class OminoCanvas extends React.PureComponent {
   }
 
   handleHoverIn = () => {
+    console.log(this.props.active);
+    if (!this.props.active) {
+      return
+    }
     this.setState({
       isHovering: true,
     })
@@ -131,6 +135,7 @@ export default class OminoSelector extends React.PureComponent {
           <OminoCanvas
             key={ominoIdx}
             ominoIdx={ominoIdx}
+            active={this.props.active}
             currentColor={this.props.currentColor}
             isSelected={this.props.selectedOminoIdx === ominoIdx}
             onSelect={this.handleSelect}
