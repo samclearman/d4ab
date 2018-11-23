@@ -321,7 +321,7 @@ export default class Game extends React.PureComponent {
       color: this.state.theme.colors[playerIndex],
       cursor: 'pointer',
       display: 'inline-block',
-      fontSize: '20px',
+      fontSize: '40px',
     }
     const textDecorations = []
     if (this.nextPlayer === playerIndex) {
