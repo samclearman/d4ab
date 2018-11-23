@@ -345,7 +345,7 @@ export default class Game extends React.PureComponent {
     const player = this.state.selectorPlayer
     const active = this.state.claimedPlayers.includes(player)
     const selector = active ? this.handleSelectOmino : () => {}
-    const selectedIdx = active ? this.state.selectedOminoIdx : 0;
+    const selectedIdx = player === this.state.selectedOminoPlayer ? this.state.selectedOminoIdx : 0;
     const color = this.selectorColor
     return (
       <OminoSelector
