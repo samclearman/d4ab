@@ -329,8 +329,7 @@ export default class Game extends React.PureComponent {
       fontWeight: 'bold',
       textTransform: 'uppercase',
       letterSpacing: '3px',
-      opacity: ominoSelected ? 1 : 0.2,
-      cursor: ominoSelected ? 'pointer' : 'not-allowed',
+      cursor: 'pointer',
       paddingRight: '10px',
     }
     const controlStyle = {
@@ -409,9 +408,9 @@ export default class Game extends React.PureComponent {
     return (
       <OminoSelector
         active={active}
-        key={(10 * active) + player}
         ominosRemaining={this.state.board.ominosRemaining[player]}
         selectedOminoIdx={selectedIdx}
+        currentTransformation={this.state.currentTransformation}
         player={player}
         currentColor={color}
         onSelectOmino={selector}
@@ -420,6 +419,7 @@ export default class Game extends React.PureComponent {
   }
 
   render() {
+    console.log('rendering...')
     const containerStyle = {
       display: 'flex',
       alignItems: 'flex-start',

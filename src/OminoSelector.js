@@ -1,17 +1,18 @@
 import React from 'react'
 import _ from 'lodash'
 import CanvasBoard, { makeTheme } from './graphics/canvasBoard'
-import { getOmino, unpadded } from './game/ominos'
+import { getOmino, unpadded, transformed } from './game/ominos'
 
 class OminoCanvas extends React.PureComponent {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.container = React.createRef()
     this.canvas = React.createRef()
     this.canvasBoard = new CanvasBoard()
     this.state = {
       isHovering: false,
     }
+    this.unpaddedOmino = transformed(getOmino(props.ominoIdx), props.currentTransformation)
   }
 
   componentDidMount() {
@@ -19,49 +20,51 @@ class OminoCanvas extends React.PureComponent {
     this.componentDidUpdate()
   }
 
+  UNSAFE_componentWillUpdate(nextProps) {
+    if(nextProps.currentTransformation) {
+      this.unpaddedOmino = transformed(getOmino(this.props.ominoIdx), nextProps.currentTransformation)
+    }
+  }
+  
+  //   if (this.canvas.current.style) {
+  //     this.canvas.current.style.height = nextProps.rows * 20
+  //     this.canvas.current.style.width = nextProps.cols * 20
+  //   }
+  // }
+  
   componentDidUpdate() {
     this.updateCanvasBoard()
   }
 
   get rows() {
-    const { ominoIdx } = this.props
-    const omino = getOmino(ominoIdx);
-    const unpaddedOmino = unpadded(omino)
-    return unpaddedOmino.length
+    return this.unpaddedOmino.length
   }
 
   get cols() {
-    const { ominoIdx } = this.props
-    const omino = getOmino(ominoIdx);
-    if (!omino) debugger
-    const unpaddedOmino = unpadded(omino)
-    return unpaddedOmino[0].length
+    return Math.max(...this.unpaddedOmino.map(r => r.length))
   }
 
   updateCanvasBoard() {
-    const { ominoIdx, currentColor } = this.props
-    const omino = getOmino(ominoIdx)
-    if (!omino) return
-    const unpaddedOmino = unpadded(omino)
     const dimensions = {
       rows: this.rows,
       cols: this.cols,
     }
     const cells = []
-    unpaddedOmino.forEach((row, i) => row.forEach((val, j) => {
+    this.unpaddedOmino.forEach((row, i) => row.forEach((val, j) => {
       cells.push({
         i,
         j,
         val,
       })
     }))
-    const theme = makeTheme(currentColor)
+    const theme = makeTheme(this.props.currentColor)
     this.canvasBoard.set({
       dimensions,
       cells,
       theme,
     })
     this.canvasBoard.render()
+
   }
 
   handleHoverIn = () => {
@@ -85,7 +88,7 @@ class OminoCanvas extends React.PureComponent {
 
   render() {
     const containerStyle = {
-      padding: '32px',
+      padding: '10px',
       opacity: this.props.isSelected ? 1 : (this.state.isHovering ? 0.5 : 0.2),
       transition: 'all 0.2s',
       cursor: 'pointer',
@@ -95,7 +98,6 @@ class OminoCanvas extends React.PureComponent {
       width: this.cols * 20,
       height: this.rows * 20,
     }
-
     return (
       <div
         ref={this.container}
@@ -121,7 +123,7 @@ export default class OminoSelector extends React.PureComponent {
   render() {
     const containerStyle = {
       display: 'grid',
-      gridTemplateColumns: 'auto auto auto',
+      gridTemplateColumns: 'auto auto auto auto',
     }
     
     return (
@@ -132,6 +134,7 @@ export default class OminoSelector extends React.PureComponent {
             ominoIdx={ominoIdx}
             active={this.props.active}
             currentColor={this.props.currentColor}
+            currentTransformation={this.props.currentTransformation}
             isSelected={this.props.selectedOminoIdx === ominoIdx}
             onSelect={this.handleSelect}
             onHoverIn={this.handleHoverIn}
