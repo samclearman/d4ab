@@ -19,7 +19,7 @@ const db = firebase.firestore();
 if (!window.localStorage['id']) {
   window.localStorage['id'] = uuidv1();
 }
-const myId = window.localStorage['id'];
+const mySession = window.localStorage['id'];
 const playerSessions = {};
 const availablePlayer = () => {
   for (let i = 1; i <= 4; i++) {
@@ -47,7 +47,7 @@ const handlers = {
     }
     const claimedPlayers = []
     for (const id in playerSessions) {
-      if (playerSessions[id] === myId) {
+      if (playerSessions[id] === mySession) {
         claimedPlayers.push(id)
       }
     }
@@ -66,7 +66,7 @@ export const eventList = (getState, setState, { gameId }) => {
   const dispatch = (event) => {
     doc.update({
       events: firebase.firestore.FieldValue.arrayUnion(
-        Object.assign(event, {source: myId})
+        Object.assign(event, {source: mySession})
       )
     })
   }

@@ -65,7 +65,6 @@ class OminoCanvas extends React.PureComponent {
   }
 
   handleHoverIn = () => {
-    console.log(this.props.active);
     if (!this.props.active) {
       return
     }
@@ -115,12 +114,7 @@ class OminoCanvas extends React.PureComponent {
 }
 
 export default class OminoSelector extends React.PureComponent {
-  componentDidMount = () => {
-    this.props.onSelectOmino(_.findLast(_.keys(this.props.ominosRemaining), k => this.props.ominosRemaining[k]));
-  }
-
   handleSelect = ominoIdx => {
-    console.log(this.props.player)
     this.props.onSelectOmino(ominoIdx, this.props.player)
   }
 

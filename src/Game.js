@@ -20,7 +20,8 @@ export default class Game extends React.PureComponent {
     this.state = {
       board: NEW_BOARD,
       cell: null,
-      selectedOminoIdx: null,
+      selectedOminoPlayer: 0,
+      selectedOminoIdx: 0,
       selectedSpace: SPACES.BOARD,
       pieces: [],
       currentTransformation: {
@@ -31,7 +32,6 @@ export default class Game extends React.PureComponent {
       theme: ANGELA_THEME,
       claimedPlayers: [],
       requestedPlayers: props.players || [],
-      activePlayer: 0,
       selectorPlayer: 1
     }
 
@@ -76,18 +76,26 @@ export default class Game extends React.PureComponent {
     window.removeEventListener('keydown', this.handleKeyDown)
   }
 
-  get playerIndex() {
-    if (!this.state.activePlayer) {
-      if (this.state.claimedPlayers.length === 0) {
-        return 0
-      }
-      return this.state.claimedPlayers[0]
-    }
-    return this.state.activePlayer;
+  get selectedOminoPlayer() {
+    return this.state.selectedOminoPlayer
   }
 
-  get playerColor() {
-    return this.state.theme.colors[this.playerIndex]
+  get nextPlayer() {
+    return this.state.board.nextPlayer
+  }
+  
+  get nextClaimedPlayer() {
+    for (let i = 0; i < 4; i++) {
+      const p = ((this.nextPlayer + i) % 4) || 4
+      if (this.state.board.alive[p] && this.state.claimedPlayers.includes(p)) {
+        return p
+      }
+    }
+    return 0
+  }
+
+  get selectedOminoColor() {
+    return this.state.theme.colors[this.selectedOminoPlayer]
   }
 
   get selectorColor() {
@@ -97,7 +105,7 @@ export default class Game extends React.PureComponent {
   get currentPieceIsValid() {
     const { board, cell, selectedOminoIdx, currentTransformation } = this.state
     if (!cell || !selectedOminoIdx) return false
-    return validatePlace(board, this.playerIndex, selectedOminoIdx, currentTransformation, cell.i, cell.j)
+    return validatePlace(board, this.selectedOminoPlayer, selectedOminoIdx, currentTransformation, cell.i, cell.j)
   }
 
   get canConfirm() {
@@ -121,7 +129,7 @@ export default class Game extends React.PureComponent {
     this.canvasBoard.set({
       dimensions,
       cells,
-      currentColor: this.playerColor,
+      currentColor: this.selectedOminoColor,
       ghost,
     })
     this.canvasBoard.render()
@@ -201,10 +209,9 @@ export default class Game extends React.PureComponent {
     }, this.updateCanvasBoard);
   }
 
-  handleSelectOmino = (selectedOminoIdx, playerIndex) => {
-    console.log(playerIndex)
+  handleSelectOmino = (selectedOminoIdx, selectedOminoPlayer) => {
     this.setState({
-      activePlayer: playerIndex,
+      selectedOminoPlayer,
       selectedOminoIdx,
       cell: null,
       staged: false,
@@ -232,7 +239,7 @@ export default class Game extends React.PureComponent {
 
     this.eventList.dispatch({
       type: 'place',
-      playerIndex: this.playerIndex,
+      playerIndex: this.selectedOminoPlayer,
       selectedOminoIdx,
       currentTransformation,
       cell,
@@ -241,7 +248,7 @@ export default class Game extends React.PureComponent {
 
   renderTitle() {
     const titleStyle = {
-      color: this.playerColor,
+      color: this.state.theme.colors[this.nextClaimedPlayer],
       fontSize: '20px',
       fontWeight: 'bold',
       textTransform: 'uppercase',
@@ -315,6 +322,9 @@ export default class Game extends React.PureComponent {
       cursor: 'pointer',
       display: 'inline-block',
       fontSize: '20px',
+    }
+    if (this.nextPlayer === playerIndex) {
+      style.textDecoration = 'overline'
     }
     return(
         <div style={style} onClick={handler}>{ button }</div>

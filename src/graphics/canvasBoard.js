@@ -20,7 +20,7 @@ export const ANGELA_THEME = {
   gridBackground: '#fafafa',
   gridLine: 'white',
   colors: [
-    'white',
+    '#fafafa',
     '#E1B16A',
     '#78A5A3',
     '#CE5A57',
