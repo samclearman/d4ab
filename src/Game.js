@@ -29,8 +29,8 @@ export default class Game extends React.PureComponent {
       },
       staged: false,
       theme: ANGELA_THEME,
-      playerIds: [],
-      requestedPlayerIds: props.players || [],
+      claimedPlayers: [],
+      requestedPlayers: props.players || [],
       activePlayer: 0,
       selectorPlayer: 1
     }
@@ -78,10 +78,10 @@ export default class Game extends React.PureComponent {
 
   get playerIndex() {
     if (!this.state.activePlayer) {
-      if (this.state.playerIds.length === 0) {
+      if (this.state.claimedPlayers.length === 0) {
         return 0
       }
-      return this.state.playerIds[0]
+      return this.state.claimedPlayers[0]
     }
     return this.state.activePlayer;
   }
@@ -328,7 +328,7 @@ export default class Game extends React.PureComponent {
   
   renderOminoSelector() {
     const player = this.state.selectorPlayer
-    const active = this.state.playerIds.includes(player)
+    const active = this.state.claimedPlayers.includes(player)
     const selector = active ? this.handleSelectOmino : () => {}
     const selectedIdx = active ? this.state.selectedOminoIdx : 0;
     const color = this.selectorColor

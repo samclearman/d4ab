@@ -20,10 +20,10 @@ if (!window.localStorage['id']) {
   window.localStorage['id'] = uuidv1();
 }
 const myId = window.localStorage['id'];
-const playerIds = {};
+const playerSessions = {};
 const availablePlayer = () => {
   for (let i = 1; i <= 4; i++) {
-    if (!playerIds[i]) {
+    if (!playerSessions[i]) {
       return i;
     }
   }
@@ -32,7 +32,7 @@ const availablePlayer = () => {
 
 const handlers = {
   place: (gameState, event) => {
-    if (playerIds[event.playerIndex] !== event.source) {
+    if (playerSessions[event.playerIndex] !== event.source) {
       // Do something?
       return;
     }
@@ -43,19 +43,18 @@ const handlers = {
 
   claimPlayers: (gameState, event) => {
     for (const playerId of event.playerIds) {
-      playerIds[playerId] = playerId[playerId] || event.source
+      playerSessions[playerId] = playerSessions[playerId] || event.source
     }
     const claimedPlayers = []
-    for (const id in playerIds) {
-      if (playerIds[id] === myId) {
+    for (const id in playerSessions) {
+      if (playerSessions[id] === myId) {
         claimedPlayers.push(id)
       }
     }
-    return { playerIds: claimedPlayers.map(p => parseInt(p)) }
+    return { claimedPlayers: claimedPlayers.map(p => parseInt(p)) }
   },
     
 }
-
 
 export const eventList = (getState, setState, { gameId }) => {
   
@@ -82,14 +81,16 @@ export const eventList = (getState, setState, { gameId }) => {
       processedEvents.push(events[i]);
     }
 
-    if (!(getState()['requestedPlayerIds'] && (getState()['requestedPlayerIds']).length > 0)) {
+    // Make sure we've claimed the players that we want (or if no players are requested,
+    // claim the next available player.)
+    if (!(getState()['requestedPlayers'] && (getState()['requestedPlayers']).length > 0)) {
       if (availablePlayer()) {
-        setState({requestedPlayerIds: [availablePlayer()]})
+        setState({requestedPlayers: [availablePlayer()]})
       }
     }
     const unclaimedPlayers = [];
-    for (const player of (getState()['requestedPlayerIds'])) {
-      if (!(player in getState()['playerIds'])) {
+    for (const player of (getState()['requestedPlayers'])) {
+      if (!(player in getState()['claimedPlayers'])) {
         unclaimedPlayers.push(player)
       }
     }
