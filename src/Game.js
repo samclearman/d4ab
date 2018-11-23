@@ -195,18 +195,45 @@ export default class Game extends React.PureComponent {
     e.stopPropagation()
   }
 
-  handleTransformation = (transformation) => {
+  rotate = (dr) => {
     this.setState(prevState => {
-      let { rotations, flips } = prevState.currentTransformation;
-      if (transformation === 'ArrowUp') {
-        flips = (flips + 1) % 2;
-      } else {
-        let dr = (transformation === 'ArrowRight') ? 1 : -1;
-        dr *= Math.pow(-1, flips);
-        rotations = (rotations + dr + 4) % 4;
-      }
-      return { currentTransformation: { flips, rotations } };
-    }, this.updateCanvasBoard);
+      let { rotations, flips } = prevState.currentTransformation
+      dr = -1
+      dr *= Math.pow(-1, flips)
+      rotations = (rotations + dr + 4) % 4
+      return { currentTransformation: { rotations, flips } }
+    }, this.updateCanvasBoard)
+  }
+
+  rotateLeft = () => {
+    console.log('rotateLeft')
+    this.rotate(-1)
+  }
+
+  rotateRight = () => {
+    this.rotate(1)
+  }
+
+  flip = () => {
+    this.setState(prevState => {
+      let { rotations, flips } = prevState.currentTransformation
+      flips = (flips + 1) % 2;
+      return { currentTransformation: { rotations, flips } }
+    }, this.updateCanvasBoard)
+  }
+      
+  handleTransformation = (transformation) => {
+    switch(transformation) {
+    case 'ArrowUp':
+      this.flip()
+      break
+    case 'ArrowLeft':
+      this.rotateLeft()
+      break
+    case 'ArrowRight':
+      this.rotateRight()
+      break
+    }
   }
 
   handleSelectOmino = (selectedOminoIdx, selectedOminoPlayer) => {
@@ -276,17 +303,49 @@ export default class Game extends React.PureComponent {
       height: 600,
       position: 'relative',
     }
+    
+    const palletStyle = {
+      display: 'flex',
+    }
+    
     return (
       <div>
         <div ref={this.container} style={containerStyle}>
           <canvas ref={this.canvas} style={canvasStyle}/>
         </div>
-
-        {this.renderConfirmButton()}
+        <div style={palletStyle}>
+          {this.renderControls()}
+          {this.renderConfirmButton()}
+        </div>
       </div>
     )
   }
 
+  renderControls() {
+    const ominoSelected = !!this.state.selectedOminoIdx
+    const controlsStyle = {
+      fontFamily: 'Roboto Condensed',
+      fontSize: '20px',
+      fontWeight: 'bold',
+      textTransform: 'uppercase',
+      letterSpacing: '3px',
+      opacity: ominoSelected ? 1 : 0.2,
+      cursor: ominoSelected ? 'pointer' : 'not-allowed',
+      paddingRight: '10px',
+    }
+    const controlStyle = {
+      display: 'inline-block',
+      paddingRight: '10px',
+    }
+    return (
+      <div style={controlsStyle}>
+        <div style={controlStyle} onClick={this.rotateLeft}>↺</div>
+        <div style={controlStyle} onClick={this.flip}>⇆</div>
+        <div style={controlStyle} onClick={this.rotateRight}>↻</div>
+      </div>
+    )
+  }
+  
   renderConfirmButton() {
     const buttonStyle = {
       fontFamily: 'Roboto Condensed',
