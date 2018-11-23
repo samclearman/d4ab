@@ -188,6 +188,8 @@ export default class Game extends React.PureComponent {
       this.handleTransformation(e.key)
     } else if (e.key === 'Tab') {
       this.handleToggleSpace()
+    } else if (e.key === '/') {
+      this.handleCycleSelector()
     } else {
       return
     }
@@ -206,7 +208,6 @@ export default class Game extends React.PureComponent {
   }
 
   rotateLeft = () => {
-    console.log('rotateLeft')
     this.rotate(-1)
   }
 
@@ -366,6 +367,11 @@ export default class Game extends React.PureComponent {
     )
   }
 
+  handleCycleSelector() {
+    const next = ((this.state.selectorPlayer + 1) % 4) || 4
+    this.selectSelector(next)
+  }
+  
   selectSelector(playerIndex) {
     this.setState({selectorPlayer: playerIndex})
   }
@@ -419,7 +425,6 @@ export default class Game extends React.PureComponent {
   }
 
   render() {
-    console.log('rendering...')
     const containerStyle = {
       display: 'flex',
       alignItems: 'flex-start',
