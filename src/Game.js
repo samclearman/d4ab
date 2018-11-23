@@ -307,6 +307,7 @@ export default class Game extends React.PureComponent {
     
     const palletStyle = {
       display: 'flex',
+      justifyContent: 'space-around',
     }
     
     return (
@@ -315,8 +316,8 @@ export default class Game extends React.PureComponent {
           <canvas ref={this.canvas} style={canvasStyle}/>
         </div>
         <div style={palletStyle}>
-          {this.renderControls()}
           {this.renderConfirmButton()}
+          {this.renderControls()}
         </div>
       </div>
     )
@@ -331,7 +332,6 @@ export default class Game extends React.PureComponent {
       textTransform: 'uppercase',
       letterSpacing: '3px',
       cursor: 'pointer',
-      paddingRight: '10px',
     }
     const controlStyle = {
       display: 'inline-block',
@@ -425,26 +425,31 @@ export default class Game extends React.PureComponent {
   }
 
   render() {
+    const appStyle = {
+      display: 'flex',
+      alignItems: 'top',
+      justifyContent: 'space-around',
+    };
+                
     const containerStyle = {
       display: 'flex',
       alignItems: 'flex-start',
     }
 
     return (
-      <div>
-        {this.renderTitle()}
-      
-        <div style={containerStyle}>
-          {this.renderCanvasBoard()}
-
-        <div style={{ width: '60px' }} />
-          <div>
-            {this.renderOminoSelectorSelector()}
-            {this.renderOminoSelector()}
+      <div className="App" style={appStyle}>
+        <div>
+          {this.renderTitle()}
+          <div style={containerStyle}>
+            {this.renderCanvasBoard()}
           </div>
         </div>
+        <div style={{ width: '60px' }} />
+        <div>
+          {this.renderOminoSelectorSelector()}
+          {this.renderOminoSelector()}
+        </div>
       </div>
-        
     )
   }
 }
