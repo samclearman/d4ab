@@ -323,9 +323,14 @@ export default class Game extends React.PureComponent {
       display: 'inline-block',
       fontSize: '20px',
     }
+    const textDecorations = []
     if (this.nextPlayer === playerIndex) {
-      style.textDecoration = 'overline'
+      textDecorations.push('overline')
     }
+    if (this.state.claimedPlayers.includes(playerIndex)) {
+      textDecorations.push('underline')
+    }
+    style.textDecoration = textDecorations.join(' ')
     return(
         <div style={style} onClick={handler}>{ button }</div>
     )

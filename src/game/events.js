@@ -48,10 +48,10 @@ const handlers = {
     const claimedPlayers = []
     for (const id in playerSessions) {
       if (playerSessions[id] === mySession) {
-        claimedPlayers.push(id)
+        claimedPlayers.push(parseInt(id))
       }
     }
-    return { claimedPlayers: claimedPlayers.map(p => parseInt(p)) }
+    return { claimedPlayers }
   },
     
 }
@@ -83,14 +83,14 @@ export const eventList = (getState, setState, { gameId }) => {
 
     // Make sure we've claimed the players that we want (or if no players are requested,
     // claim the next available player.)
-    if (!(getState()['requestedPlayers'] && (getState()['requestedPlayers']).length > 0)) {
+    if (!(getState()['requestedPlayers'].length > 0) && !(getState()['claimedPlayers'].length > 0)) {
       if (availablePlayer()) {
         setState({requestedPlayers: [availablePlayer()]})
       }
     }
     const unclaimedPlayers = [];
     for (const player of (getState()['requestedPlayers'])) {
-      if (!(player in getState()['claimedPlayers'])) {
+      if (!(getState()['claimedPlayers'].includes(player))) {
         unclaimedPlayers.push(player)
       }
     }
