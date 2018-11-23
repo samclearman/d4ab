@@ -19,12 +19,18 @@ class App extends Component {
     return (
       <Switch>
         <Route exact path='/' component={CreateGame} />
-        <Route path='/game/:id' render={({ match }) => (
-          <div className="App" style={appStyle}>
-            <Game gameId={match.params.id}/>
-          </div>
-        )}
-        />
+        <Route path='/game/:id' render={({ match, location }) => {
+          let params = new URLSearchParams(location.search)
+          let players
+          if (params.get('players')) {
+            players = params.get('players').split(',').map(s => parseInt(s))
+          }
+          return (
+            <div className="App" style={appStyle}>
+              <Game gameId={match.params.id} players={players}/>
+            </div>
+          )
+        }}/>
         </Switch>
     );
   }

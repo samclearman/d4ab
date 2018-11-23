@@ -120,7 +120,8 @@ export default class OminoSelector extends React.PureComponent {
   }
 
   handleSelect = ominoIdx => {
-    this.props.onSelectOmino(ominoIdx)
+    console.log(this.props.player)
+    this.props.onSelectOmino(ominoIdx, this.props.player)
   }
 
   render() {
@@ -128,7 +129,7 @@ export default class OminoSelector extends React.PureComponent {
       display: 'grid',
       gridTemplateColumns: 'auto auto auto',
     }
-
+    
     return (
       <div style={containerStyle}>
         {_.keys(this.props.ominosRemaining).map((ominoIdx, i) => ( this.props.ominosRemaining[ominoIdx] &&

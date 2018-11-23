@@ -41,12 +41,17 @@ const handlers = {
     return { board: newBoard };
   },
 
-  claimPlayer: (gameState, event) => {
-    playerIds[event.playerId] = event.source
-    if (event.source === myId) {
-      return { playerId: event.playerId }
+  claimPlayers: (gameState, event) => {
+    for (const playerId of event.playerIds) {
+      playerIds[playerId] = playerId[playerId] || event.source
     }
-    return {}
+    const claimedPlayers = []
+    for (const id in playerIds) {
+      if (playerIds[id] === myId) {
+        claimedPlayers.push(id)
+      }
+    }
+    return { playerIds: claimedPlayers.map(p => parseInt(p)) }
   },
     
 }
@@ -77,10 +82,19 @@ export const eventList = (getState, setState, { gameId }) => {
       processedEvents.push(events[i]);
     }
 
-    if (!getState()['playerId']) {
+    if (!(getState()['requestedPlayerIds'] && (getState()['requestedPlayerIds']).length > 0)) {
       if (availablePlayer()) {
-        dispatch({ type: 'claimPlayer', playerId: availablePlayer() })
+        setState({requestedPlayerIds: [availablePlayer()]})
       }
+    }
+    const unclaimedPlayers = [];
+    for (const player of (getState()['requestedPlayerIds'])) {
+      if (!(player in getState()['playerIds'])) {
+        unclaimedPlayers.push(player)
+      }
+    }
+    if (unclaimedPlayers.length > 0) {
+      dispatch({ type: 'claimPlayers', playerIds: unclaimedPlayers })
     }
   }
   doc.onSnapshot(snapshotHandler);

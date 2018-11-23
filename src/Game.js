@@ -29,7 +29,9 @@ export default class Game extends React.PureComponent {
       },
       staged: false,
       theme: ANGELA_THEME,
-      playerId: 0,
+      playerIds: [],
+      requestedPlayerIds: props.players || [],
+      activePlayer: 0,
       selectorPlayer: 1
     }
 
@@ -75,7 +77,13 @@ export default class Game extends React.PureComponent {
   }
 
   get playerIndex() {
-    return this.state.playerId;
+    if (!this.state.activePlayer) {
+      if (this.state.playerIds.length === 0) {
+        return 0
+      }
+      return this.state.playerIds[0]
+    }
+    return this.state.activePlayer;
   }
 
   get playerColor() {
@@ -193,8 +201,10 @@ export default class Game extends React.PureComponent {
     }, this.updateCanvasBoard);
   }
 
-  handleSelectOmino = (selectedOminoIdx) => {
+  handleSelectOmino = (selectedOminoIdx, playerIndex) => {
+    console.log(playerIndex)
     this.setState({
+      activePlayer: playerIndex,
       selectedOminoIdx,
       cell: null,
       staged: false,
@@ -317,8 +327,8 @@ export default class Game extends React.PureComponent {
   }
   
   renderOminoSelector() {
-    const active = this.state.selectorPlayer === this.state.playerId
     const player = this.state.selectorPlayer
+    const active = this.state.playerIds.includes(player)
     const selector = active ? this.handleSelectOmino : () => {}
     const selectedIdx = active ? this.state.selectedOminoIdx : 0;
     const color = this.selectorColor
@@ -328,6 +338,7 @@ export default class Game extends React.PureComponent {
         key={(10 * active) + player}
         ominosRemaining={this.state.board.ominosRemaining[player]}
         selectedOminoIdx={selectedIdx}
+        player={player}
         currentColor={color}
         onSelectOmino={selector}
       />
