@@ -200,7 +200,6 @@ export default class Game extends React.PureComponent {
   rotate = (dr) => {
     this.setState(prevState => {
       let { rotations, flips } = prevState.currentTransformation
-      dr = -1
       dr *= Math.pow(-1, flips)
       rotations = (rotations + dr + 4) % 4
       return { currentTransformation: { rotations, flips } }
@@ -339,9 +338,9 @@ export default class Game extends React.PureComponent {
     }
     return (
       <div style={controlsStyle}>
-        <div style={controlStyle} onClick={this.rotateLeft}>↺</div>
-        <div style={controlStyle} onClick={this.flip}>⇆</div>
-        <div style={controlStyle} onClick={this.rotateRight}>↻</div>
+        <div style={controlStyle} onClick={this.rotateLeft}>⟲</div>
+        <div style={controlStyle} onClick={this.flip}>⤧</div>
+        <div style={controlStyle} onClick={this.rotateRight}>⟳</div>
       </div>
     )
   }
