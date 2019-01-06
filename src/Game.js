@@ -277,6 +277,7 @@ export default class Game extends React.PureComponent {
     const titleStyle = {
       color: this.state.theme.colors[this.nextClaimedPlayer],
       fontSize: '20px',
+      paddingTop: '20px',
       fontWeight: 'bold',
       textTransform: 'uppercase',
       letterSpacing: '3px',
@@ -291,6 +292,10 @@ export default class Game extends React.PureComponent {
   
   renderCanvasBoard() {
     const canvasStyle = {
+      width: '500px',
+      height: '500px',
+      maxWidth: '100vw',
+      maxHeight: '100vw',
       // position: 'absolute',
       // top: '50%',
       // left: '50%',
@@ -299,9 +304,9 @@ export default class Game extends React.PureComponent {
 
     const containerStyle = {
       // margin: '30px auto',
-      minWidth: 300,
-      minHeight: 300,
       // position: 'relative',
+      width: '500px',
+      maxWidth: '100vw',
     }
     
     const palletStyle = {
@@ -326,7 +331,7 @@ export default class Game extends React.PureComponent {
     const ominoSelected = !!this.state.selectedOminoIdx
     const controlsStyle = {
       fontFamily: 'Roboto Condensed',
-      fontSize: '15px',
+      fontSize: '20px',
       fontWeight: 'bold',
       textTransform: 'uppercase',
       letterSpacing: '3px',
@@ -348,7 +353,7 @@ export default class Game extends React.PureComponent {
   renderConfirmButton() {
     const buttonStyle = {
       fontFamily: 'Roboto Condensed',
-      fontSize: '15px',
+      fontSize: '20px',
       fontWeight: 'bold',
       textTransform: 'uppercase',
       letterSpacing: '3px',
@@ -361,7 +366,7 @@ export default class Game extends React.PureComponent {
         style={buttonStyle}
         onClick={this.handleConfirm}
       >
-        Confirm <em>[Enter ↵]</em>
+        Confirm
       </div>
     )
   }
