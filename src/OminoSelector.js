@@ -88,15 +88,18 @@ class OminoCanvas extends React.PureComponent {
 
   render() {
     const containerStyle = {
-      padding: '10px',
       opacity: this.props.isSelected ? 1 : (this.state.isHovering ? 0.5 : 0.2),
       transition: 'all 0.2s',
       cursor: 'pointer',
     }
 
     const canvasStyle = {
-      width: this.cols * 20,
-      height: this.rows * 20,
+      // width: this.cols * 20,
+      // height: this.rows * 20,
+      width: '125px',
+      height: '125px',
+      maxWidth: '25vw',
+      maxHeight: '25vw',
     }
     return (
       <div
@@ -124,6 +127,8 @@ export default class OminoSelector extends React.PureComponent {
     const containerStyle = {
       display: 'grid',
       gridTemplateColumns: 'auto auto auto auto',
+      width: '500px',
+      maxWidth: '100vw',
     }
     
     return (

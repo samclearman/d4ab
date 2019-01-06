@@ -8,14 +8,6 @@ class App extends Component {
 
 
   render() {
-    const appStyle = {
-      height: '100vh',
-      width: '100vw',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-around',
-    };
-
     return (
       <Switch>
         <Route exact path='/' component={CreateGame} />
@@ -26,9 +18,7 @@ class App extends Component {
             players = params.get('players').split(',').map(s => parseInt(s))
           }
           return (
-            <div className="App" style={appStyle}>
               <Game gameId={match.params.id} players={players}/>
-            </div>
           )
         }}/>
         </Switch>

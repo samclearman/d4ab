@@ -277,6 +277,7 @@ export default class Game extends React.PureComponent {
     const titleStyle = {
       color: this.state.theme.colors[this.nextClaimedPlayer],
       fontSize: '20px',
+      paddingTop: '20px',
       fontWeight: 'bold',
       textTransform: 'uppercase',
       letterSpacing: '3px',
@@ -291,17 +292,21 @@ export default class Game extends React.PureComponent {
   
   renderCanvasBoard() {
     const canvasStyle = {
-      position: 'absolute',
-      top: '50%',
-      left: '50%',
-      transform: 'translateX(-50%) translateY(-50%)'
+      width: '500px',
+      height: '500px',
+      maxWidth: '100vw',
+      maxHeight: '100vw',
+      // position: 'absolute',
+      // top: '50%',
+      // left: '50%',
+      // transform: 'translateX(-50%) translateY(-50%)'
     }
 
     const containerStyle = {
-      margin: '30px auto',
-      width: 600,
-      height: 600,
-      position: 'relative',
+      // margin: '30px auto',
+      // position: 'relative',
+      width: '500px',
+      maxWidth: '100vw',
     }
     
     const palletStyle = {
@@ -361,7 +366,7 @@ export default class Game extends React.PureComponent {
         style={buttonStyle}
         onClick={this.handleConfirm}
       >
-        Confirm <em>[Enter ↵]</em>
+        Confirm
       </div>
     )
   }
@@ -426,8 +431,6 @@ export default class Game extends React.PureComponent {
   render() {
     const appStyle = {
       display: 'flex',
-      alignItems: 'top',
-      justifyContent: 'space-around',
     };
                 
     const containerStyle = {
@@ -435,20 +438,30 @@ export default class Game extends React.PureComponent {
       alignItems: 'flex-start',
     }
 
+    const thinCol = {
+      flexGrow: 3,
+    }
+
+    const thickCol = {
+      flexGrow: 1,
+    }
+
     return (
-      <div className="App" style={appStyle}>
-        <div>
-          {this.renderTitle()}
-          <div style={containerStyle}>
-            {this.renderCanvasBoard()}
+        <div className="App" style={appStyle}>
+          <div style={thinCol}></div>
+          <div>
+            {this.renderTitle()}
+            <div style={containerStyle}>
+              {this.renderCanvasBoard()}
+            </div>
           </div>
+          <div style={thickCol}></div>
+          <div>
+            {this.renderOminoSelectorSelector()}
+            {this.renderOminoSelector()}
+          </div>
+          <div style={thinCol}></div>
         </div>
-        <div style={{ width: '60px' }} />
-        <div>
-          {this.renderOminoSelectorSelector()}
-          {this.renderOminoSelector()}
-        </div>
-      </div>
     )
   }
 }
