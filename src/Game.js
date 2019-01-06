@@ -277,10 +277,10 @@ export default class Game extends React.PureComponent {
     const titleStyle = {
       color: this.state.theme.colors[this.nextClaimedPlayer],
       fontSize: '20px',
-      paddingTop: '20px',
       fontWeight: 'bold',
       textTransform: 'uppercase',
       letterSpacing: '3px',
+      height: '50px',
     }
 
     return (
@@ -405,8 +405,11 @@ export default class Game extends React.PureComponent {
   }
   
   renderOminoSelectorSelector() {
+    const style = {
+      height: '50px',
+    }
     const selectorSelectorSelectors = [1,2,3,4].map(i => this.renderOminoSelectorSelectorSelector(i))
-    return ( <div>{ selectorSelectorSelectors }</div> )
+    return ( <div style={style} >{ selectorSelectorSelectors }</div> )
   }
   
   renderOminoSelector() {
