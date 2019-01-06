@@ -195,18 +195,14 @@ export const reducers = {
     const cells = _.cloneDeep(b.cells)
     const positions = getOminoPositions(omino, transformation, x, y)
     const nextPlayer = getNextPlayer(b, player)
-    let gameOver = false
-    if (nextPlayer === player) {
-      gameOver = true
-    }
+
     for (const {i, j} of positions) {
       const cell = cells[(i * WIDTH) + j]
       cell.val = player
     }
-    return {
+    const nextBoard =  {
       ...b,
       nextPlayer,
-      gameOver,
       cells,
       ominosRemaining: {
         ...ominosRemaining,
@@ -216,6 +212,12 @@ export const reducers = {
         },
       },
     }
+    let gameOver = false
+    if (!hasValidMove(nextBoard, nextPlayer)) {
+      gameOver = true
+    }
+    nextBoard.gameOver = gameOver
+    return nextBoard
   },
 }
 
