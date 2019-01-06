@@ -151,9 +151,9 @@ export default class CanvasBoard extends EventEmitter {
     this.canvas = canvas
     this.canvas.addEventListener('mousemove', this.handleMouseMove)
     this.canvas.addEventListener('click', this.handleClick)
-    this.canvas.addEventListener('touchstart', this.handleTouchStart)
-    this.canvas.addEventListener('touchmove', this.handleTouchMove)
-    this.canvas.addEventListener('touchend', this.handleTouchEnd)
+    // this.canvas.addEventListener('touchstart', this.handleTouchStart)
+    // this.canvas.addEventListener('touchmove', this.handleTouchMove)
+    // this.canvas.addEventListener('touchend', this.handleTouchEnd)
   }
 
   resize() {
