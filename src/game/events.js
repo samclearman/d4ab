@@ -57,7 +57,9 @@ const handlers = {
 }
 
 export const eventList = (getState, setState, { gameId }) => {
-  
+  const processedEvents = [];
+  const doc = db.collection('games').doc(gameId)
+
   const process = (event) => {
     const handler = handlers[event.type];
     setState(handler(getState(), event))
@@ -65,14 +67,11 @@ export const eventList = (getState, setState, { gameId }) => {
     
   const dispatch = (event) => {
     doc.update({
-      events: firebase.firestore.FieldValue.arrayUnion(
-        Object.assign(event, {source: mySession})
+      events: processedEvents.concat(
+        [Object.assign(event, {source: mySession})]
       )
     })
   }
-  
-  const processedEvents = [];
-  const doc = db.collection('games').doc(gameId)
   
   const snapshotHandler = doc => {
     const events = doc.data().events
