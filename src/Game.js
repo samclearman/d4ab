@@ -434,6 +434,10 @@ export default class Game extends React.PureComponent {
   render() {
     const appStyle = {
       display: 'flex',
+      width: '100vw',
+      height: '100vh',
+      overflow: 'scroll',
+      scrollSnapType: 'x mandatory',
     };
                 
     const containerStyle = {
@@ -449,17 +453,21 @@ export default class Game extends React.PureComponent {
       flexGrow: 1,
     }
 
+    const snapTarget = {
+      scrollSnapAlign: 'start',
+    }
+    
     return (
         <div className="App" style={appStyle}>
           <div style={thinCol}></div>
-          <div>
+          <div style={snapTarget}>
             {this.renderTitle()}
             <div style={containerStyle}>
               {this.renderCanvasBoard()}
             </div>
           </div>
           <div style={thickCol}></div>
-          <div>
+          <div style={snapTarget}>
             {this.renderOminoSelectorSelector()}
             {this.renderOminoSelector()}
           </div>
