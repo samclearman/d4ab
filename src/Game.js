@@ -25,7 +25,7 @@ export default class Game extends React.PureComponent {
       selectedSpace: SPACES.BOARD,
       pieces: [],
       currentTransformation: {
-        rotations: 0,
+        rotations: 2,
         flips: 0,
       },
       staged: false,
@@ -242,10 +242,6 @@ export default class Game extends React.PureComponent {
       selectedOminoIdx,
       cell: null,
       staged: false,
-      currentTransformation: {
-        rotations: 0,
-        flips: 0,
-      },
     })
   }
 
