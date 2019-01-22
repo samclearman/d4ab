@@ -256,9 +256,16 @@ export default class Game extends React.PureComponent {
     const { board, selectedOminoIdx, currentTransformation } = this.state
     if (!selectedOminoIdx) { return }
     if (!this.currentPieceIsValid) { return }
+
+    let { selectorPlayer }  = this.state
+    if (this.state.claimedPlayers.length > 1) {
+      selectorPlayer = this.state.claimedPlayers[(this.state.claimedPlayers.indexOf(this.state.selectedOminoPlayer) + 1) % this.state.claimedPlayers.length]
+    }
     this.setState({
       selectedOminoIdx: null,
+      selectorPlayer,
     })
+    
 
     this.eventList.dispatch({
       type: 'place',
