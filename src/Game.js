@@ -11,6 +11,21 @@ const SPACES = {
   OMINO_SELECTOR: 'omino_selector',
 }
 
+async function notify(message) {
+  // Let's check if the browser supports notifications
+  if (!("Notification" in window)) {
+    return
+  }
+
+  if (!['denied', 'granted'].includes(Notification.permission)) {
+    await Notification.requestPermission()
+  }
+
+  if (Notification.permission === 'granted') {
+    const notification = new Notification(message)
+  }
+}
+
 export default class Game extends React.PureComponent {
   constructor(props) {
     super()
@@ -59,19 +74,23 @@ export default class Game extends React.PureComponent {
     window.addEventListener('keydown', this.handleKeyDown)
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps, prevState) {
     if (this.state.board.gameOver) {
       this.canvasBoard.set({theme: GAME_OVER_THEME})
     }
     this.updateCanvasBoard()
+    if (this.state.board && prevState && prevState.board && this.state.board.nextPlayer !== prevState.board.nextPlayer &&
+        this.state.claimedPlayers.includes(this.state.board.nextPlayer)) {
+      notify(`It's your turn to block`)
+    }
   }
 
   componentWillUnmount() {
-    this.canvasBoard.off('hovercell', this.handleHoverCell)
-    this.canvasBoard.off('clickcell', this.handleClickCell)
-    this.canvasBoard.off('touchstartcell', this.handleTouchStartCell)
-    this.canvasBoard.off('touchmovecell', this.handleTouchMoveCell)
-    this.canvasBoard.off('touchend', this.handleTouchEnd)
+    // this.canvasBoard.off('hovercell', this.handleHoverCell)
+    // this.canvasBoard.off('clickcell', this.handleClickCell)
+    // this.canvasBoard.off('touchstartcell', this.handleTouchStartCell)
+    // this.canvasBoard.off('touchmovecell', this.handleTouchMoveCell)
+    // this.canvasBoard.off('touchend', this.handleTouchEnd)
 
     window.removeEventListener('keydown', this.handleKeyDown)
   }
