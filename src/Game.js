@@ -1,6 +1,6 @@
 import React from 'react'
 import _ from 'lodash'
-import CanvasBoard, { ANGELA_THEME, GAME_OVER_THEME } from './graphics/canvasBoard'
+import CanvasBoard, { RILKA_THEME, GAME_OVER_THEME } from './graphics/canvasBoard'
 import { NEW_BOARD, reducers, validatePlace } from './game/board'
 import { getOmino } from './game/ominos'
 import OminoSelector from './OminoSelector'
@@ -44,7 +44,7 @@ export default class Game extends React.PureComponent {
         flips: 0,
       },
       staged: false,
-      theme: ANGELA_THEME,
+      theme: RILKA_THEME,
       claimedPlayers: [],
       requestedPlayers: props.players || [],
       selectorPlayer: 1

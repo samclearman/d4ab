@@ -16,7 +16,7 @@ export const DEFAULT_THEME = {
   ],
 }
 
-export const ANGELA_THEME = {
+export const RILKA_THEME = {
   gridBackground: '#fafafa',
   gridLine: 'white',
   colors: [
