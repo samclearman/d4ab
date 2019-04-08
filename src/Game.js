@@ -22,7 +22,14 @@ async function notify(message) {
   }
 
   if (Notification.permission === 'granted') {
-    const notification = new Notification(message)
+    const notification = new Notification(
+      message,
+      {
+        icon: '/d4ac.png'
+      }
+    )
+    const w = window
+    notification.onclick = function() { w.focus(); notification.close() }
   }
 }
 
