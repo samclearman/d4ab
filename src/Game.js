@@ -360,7 +360,7 @@ export default class Game extends React.PureComponent {
     const ominoSelected = !!this.state.selectedOminoIdx
     const controlsStyle = {
       fontFamily: 'Roboto Condensed',
-      fontSize: '40px',
+      fontSize: '30px',
       fontWeight: 'bold',
       textTransform: 'uppercase',
       letterSpacing: '3px',
@@ -372,9 +372,9 @@ export default class Game extends React.PureComponent {
     }
     return (
       <div style={controlsStyle}>
-        <div style={controlStyle} onClick={this.rotateLeft}>⟲</div>
-        <div style={controlStyle} onClick={this.flip}>⤧</div>
-        <div style={controlStyle} onClick={this.rotateRight}>⟳</div>
+        <div style={controlStyle} onClick={this.rotateLeft}>↪️</div>
+        <div style={controlStyle} onClick={this.flip}>🔃</div>
+        <div style={controlStyle} onClick={this.rotateRight}>↩️</div>
       </div>
     )
   }
@@ -382,7 +382,7 @@ export default class Game extends React.PureComponent {
   renderConfirmButton() {
     const buttonStyle = {
       fontFamily: 'Roboto Condensed',
-      marginTop: '15px',
+      marginTop: '10px',
       fontSize: '20px',
       fontWeight: 'bold',
       textTransform: 'uppercase',
