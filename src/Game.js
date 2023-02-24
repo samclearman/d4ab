@@ -360,7 +360,7 @@ export default class Game extends React.PureComponent {
     const ominoSelected = !!this.state.selectedOminoIdx
     const controlsStyle = {
       fontFamily: 'Roboto Condensed',
-      fontSize: '20px',
+      fontSize: '40px',
       fontWeight: 'bold',
       textTransform: 'uppercase',
       letterSpacing: '3px',
@@ -382,6 +382,7 @@ export default class Game extends React.PureComponent {
   renderConfirmButton() {
     const buttonStyle = {
       fontFamily: 'Roboto Condensed',
+      marginTop: '15px',
       fontSize: '20px',
       fontWeight: 'bold',
       textTransform: 'uppercase',
